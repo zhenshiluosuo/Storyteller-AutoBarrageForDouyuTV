@@ -29,7 +29,7 @@ function init() {
         if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
         else finish();
     }
-    alert('欢迎使用说书人自动弹幕发射装置，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶V1.5控制台版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
+    alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶V1.5版和重载操作符V2.0版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
 }
 function run() {
     let btn = document.getElementsByClassName('ChatSend-button')[0];
