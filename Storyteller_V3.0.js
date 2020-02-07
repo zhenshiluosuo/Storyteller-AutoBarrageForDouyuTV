@@ -2,13 +2,13 @@ let div1 = document.createElement('div');//默认悬浮窗
 let div2 = document.createElement('div');//控制台
 let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 75px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;'
 let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 150px;height: 275px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;display: none;';
-let max_danmu_long = 43;//弹幕字数限制
-const min_danmu_long = 20;//最小弹幕长度
-const error_danmu_long = 30;//防止无法断句弹幕长度
+let max_danmu_long = 53;//弹幕字数限制
+const min_danmu_long = 25;//最小弹幕长度
+const error_danmu_long = 35;//防止无法断句弹幕长度
 let cycle_time;//弹幕周期，单位毫秒 建议设定至6000毫秒以上 过低有系统屏蔽风险
 let story;//textarea内容
 let story_arr = [];//story分段
-let index = 0;//小说分段
+let index;//小说分段
 let interval;//定时器
 
 init();//初始化
@@ -60,6 +60,7 @@ function run() {
     }else {
         get_better_sentence();
         let len = story_arr.length;
+        index = 0;
         interval = setInterval(() => {
             if(index === len){//小说循环
                 index = 0;
@@ -74,25 +75,35 @@ function run() {
 function finish() {
     document.getElementById('DuLunCheBtn').innerText = '出动！';
     clearInterval(interval);
+    story_arr = [];
 }
 function get_better_sentence() {
     let len = story.length;
-    let st = 0;
     let flag = 0;//引号标记
+    let str = '';
     for (let i = 0; i < len; i++) {
-        if((story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…') && i - st + 1 >= min_danmu_long && !flag) {
-            story_arr.push(story.slice(st,i + 1));
-            st = i + 1;
+        if((story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…') && str.length >= min_danmu_long && !flag) {
+            str += story.charAt(i);
+            story_arr.push();
+            str = '';
         }else if(story.charAt(i) === '“') {
+            str += story.charAt(i);
             flag = 1;
         }else if(story.charAt(i) === '”') {
+            str += story.charAt(i);
             flag = 0;
-        }else if((story.charAt(i) === '，' || story.charAt(i) === '；' || story.charAt(i) === '：' || story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…') && i - st + 1 >= error_danmu_long) {
-            story_arr.push(story.slice(st,i + 1));
-            st = i + 1;
-        }else if(i - st + 1 >= max_danmu_long) {
-            story_arr.push(story.slice(st,i + 1));
-            st = i + 1;
+        }else if((story.charAt(i) === '，' || story.charAt(i) === '；' || story.charAt(i) === '：' || story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…') && str.length >= error_danmu_long) {
+            str += story.charAt(i);
+            story_arr.push(str);
+            str = '';
+        }else if(str.length >= max_danmu_long || i === len - 1) {
+            str += story.charAt(i);
+            story_arr.push(str);
+            str = '';
+        }else if(story.charAt(i) === ' ' && i < len - 1 && story.charAt(i + 1) === ' ') {
+            continue;
+        }else {
+            str += story.charAt(i);
         }
     }
 }
