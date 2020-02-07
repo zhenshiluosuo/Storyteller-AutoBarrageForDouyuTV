@@ -43,9 +43,14 @@ function run() {
         return;
     }else if(cycle_time <= 2999) {
         alert('请珍惜账号 加大发言间隔！')
+        finish();
+        document.getElementById('DuLunCheTime').value = '9999'
         return;
     }
     if(document.getElementById('DuLunCheSelect').value === '0') {
+        if (story.length > 43){
+            story = story.slice(0,44);
+        }
         interval = setInterval(() => {
             txt.value = story;
             if (btn.innerHTML === '发送') {
