@@ -29,8 +29,9 @@ function init() {
         if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
         else finish();
     }
-    alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶V1.5版和重载操作符V2.0版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
+    alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶V1.5版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
 }
+
 function run() {
     let btn = document.getElementsByClassName('ChatSend-button')[0];
     let txt = document.getElementsByClassName('ChatSend-txt')[0];
@@ -72,11 +73,13 @@ function run() {
         }, cycle_time);
     }
 }
+
 function finish() {
     document.getElementById('DuLunCheBtn').innerText = '出动！';
     clearInterval(interval);
     story_arr = [];
 }
+
 function get_better_sentence() {
     let len = story.length;
     let flag = 0;//引号标记
@@ -86,10 +89,10 @@ function get_better_sentence() {
             str += story.charAt(i);
             story_arr.push();
             str = '';
-        }else if(story.charAt(i) === '“') {
+        }else if(story.charAt(i) === '“' || story.charAt(i) === '『' || story.charAt(i) === '「') {
             str += story.charAt(i);
             flag = 1;
-        }else if(story.charAt(i) === '”') {
+        }else if(story.charAt(i) === '”' || story.charAt(i) === '』' || story.charAt(i) === '」') {
             str += story.charAt(i);
             flag = 0;
         }else if((story.charAt(i) === '，' || story.charAt(i) === '；' || story.charAt(i) === '：' || story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…') && str.length >= error_danmu_long) {
