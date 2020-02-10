@@ -35,7 +35,7 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '独轮车控制台';
-        div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div>';
+        div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入要发射的内容 斗鱼限制单次最多43字"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 最少3000" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div>';
         div1.onclick = () => {div2.style.setProperty('display','block');}
         document.body.appendChild(div1);
         document.body.appendChild(div2);
