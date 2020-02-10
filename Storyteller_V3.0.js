@@ -85,9 +85,9 @@ function get_better_sentence() {
     let flag = 0;//引号标记
     let str = '';
     for (let i = 0; i < len; i++) {
-        if((story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…') && str.length >= min_danmu_long && !flag) {
+        if((story.charAt(i) === '。' || story.charAt(i) === '！' || story.charAt(i) === '？' || story.charAt(i) === '…' || story.charAt(i) === ' ') && str.length >= min_danmu_long && !flag) {
             str += story.charAt(i);
-            story_arr.push();
+            story_arr.push(str);
             str = '';
         }else if(story.charAt(i) === '“' || story.charAt(i) === '『' || story.charAt(i) === '「') {
             str += story.charAt(i);
