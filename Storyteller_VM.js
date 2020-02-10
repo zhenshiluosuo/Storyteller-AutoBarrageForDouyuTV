@@ -1,12 +1,13 @@
 // ==UserScript==
 // @icon          https://www.douyu.com/favicon.ico
 // @name          独轮车-说书人自动弹幕发射器
-// @namespace     [url=mailto:shinymoon@aliyun.com]shinymoon@aliyun.com[/url]
+// @namespace     https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @author        闪光魔法师
-// @description   适配斗鱼直播平台的自动弹幕发射器 抽象独轮车 说书人
+// @description   适配斗鱼直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
 // @version       0.0.1
 // @grant         none
+// @updateURL     https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/blob/master/Storyteller_VM.js
 // ==/UserScript==
 (function () {
     'use strict';
