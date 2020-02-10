@@ -40,13 +40,13 @@
         document.body.appendChild(div1);
         document.body.appendChild(div2);
         document.getElementById('DuLunCheYincang').onclick = () => {
-            if(!tip){
-                tip = true;
-                alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶V1.5版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
-            }
             div2.style.setProperty('display','none');
         }
         document.getElementById('DuLunCheBtn').onclick = () => {
+            if(!tip){
+                tip = true;
+                alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
+            }
             if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
             else finish();
         }
