@@ -36,17 +36,19 @@
         div2.style.cssText = css2;
         div1.innerHTML = '独轮车控制台';
         div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入要发射的内容 斗鱼限制单次最多43字"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 最少3000" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div>';
-        div1.onclick = () => {div2.style.setProperty('display','block');}
+        div1.onclick = () => {
+            div2.style.setProperty('display','block');
+            if(!tip){
+                tip = true;
+                alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
+            }
+        }
         document.body.appendChild(div1);
         document.body.appendChild(div2);
         document.getElementById('DuLunCheYincang').onclick = () => {
             div2.style.setProperty('display','none');
         }
         document.getElementById('DuLunCheBtn').onclick = () => {
-            if(!tip){
-                tip = true;
-                alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
-            }
             if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
             else finish();
         }
