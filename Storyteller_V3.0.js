@@ -1,7 +1,7 @@
 let div1 = document.createElement('div');//默认悬浮窗
 let div2 = document.createElement('div');//控制台
 let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 75px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;'
-let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 150px;height: 275px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;display: none;';
+let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 150px;height: 330px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;display: none;';
 let max_danmu_long = 43;//弹幕字数限制
 const min_danmu_long = 20;//最小弹幕长度
 const error_danmu_long = 30;//防止无法断句弹幕长度
@@ -10,6 +10,8 @@ let story;//textarea内容
 let story_arr = [];//story分段
 let index;//小说分段
 let interval;//定时器
+let color_box = [];//禁止的弹幕颜色
+let div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];//网页弹幕div
 
 init();//初始化
 
@@ -20,7 +22,7 @@ function init() {
     div1.style.cssText = css1;
     div2.style.cssText = css2;
     div1.innerHTML = '独轮车控制台';
-    div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div>';
+    div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div><div style="font-size: 75%;color: black;float: left;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" onclick="onClickHander1(this)"/><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" onclick="onClickHander2(this)"/><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" onclick="onClickHander3(this)"/><br>屏蔽主播狗叫：功能正在开发中';
     div1.onclick = () => {div2.style.setProperty('display','block');}
     document.body.appendChild(div1);
     document.body.appendChild(div2);
@@ -29,6 +31,19 @@ function init() {
         if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
         else finish();
     }
+    div_manmu.addEventListener('DOMNodeInserted', function () {
+        let len = div_manmu.childNodes.length;
+        for (let i = 0; i < len; i++){
+            if(div_manmu.childNodes[i].style.display === 'none')
+                continue;
+            for (let j = 0; j < color_box.length; j++){
+                if(div_manmu.childNodes[i].style.color === color_box[j]){
+                    div_manmu.childNodes[i].style.display = 'none';
+                    break;
+                }
+            }
+        }
+    },false);
     alert('欢迎使用说书人自动弹幕发射装置V3.0，本插件由斗鱼用户重载操作符和祖冲之丶丶基于祖冲之丶丶V1.5版制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！');
 }
 
@@ -130,6 +145,36 @@ function multiple() {
             if(i === len - 1){
                 story_arr.push(str);
             }
+        }
+    }
+}
+
+function onClickHander1(obj){
+    if(obj.checked){
+        color_box.push('');
+    }else{
+        for (let i = 0; i < color_box.length; i++){
+            if(color_box[i] === '') {color_box.splice(i, 1); break;}
+        }
+    }
+}
+
+function onClickHander2(obj){
+    if(obj.checked){
+        color_box.push('rgb(102, 255, 0)');
+    }else{
+        for (let i = 0; i < color_box.length; i++){
+            if(color_box[i] === 'rgb(102, 255, 0)') {color_box.splice(i, 1); break;}
+        }
+    }
+}
+
+function onClickHander3(obj){
+    if(obj.checked){
+        color_box.push('rgb(246, 68, 127)');
+    }else{
+        for (let i = 0; i < color_box.length; i++){
+            if(color_box[i] === 'rgb(246, 68, 127)') {color_box.splice(i, 1); break;}
         }
     }
 }
