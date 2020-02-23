@@ -69,9 +69,11 @@ function run() {
             story = story.slice(0,max_danmu_long + 1);
         }
         interval = setInterval(() => {
-            txt.value = story;
-            if (btn.innerHTML === '发送') {
-                btn.click();
+            if(txt.value !== ''){//输入框中有内容时等待用户发送完成后再继续
+                txt.value = story;
+                if (btn.innerHTML === '发送') {
+                    btn.click();
+                }
             }
         }, cycle_time);
     }else{
@@ -82,12 +84,14 @@ function run() {
         let len = story_arr.length;
         index = 0;
         interval = setInterval(() => {
-            if(index === len){//小说循环
-                index = 0;
-            }
-            txt.value = story_arr[index++];
-            if (btn.innerHTML === '发送') {
-                btn.click();
+            if(txt.value !== '') {//输入框中有内容时等待用户发送完成后再继续
+                if(index === len){//小说循环
+                    index = 0;
+                }
+                txt.value = story_arr[index++];
+                if (btn.innerHTML === '发送') {
+                    btn.click();
+                }
             }
         }, cycle_time);
     }
