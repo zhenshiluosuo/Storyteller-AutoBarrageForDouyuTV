@@ -5,9 +5,8 @@
 // @author        闪光魔法师
 // @description   适配斗鱼直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
-// @version       0.0.5
+// @version       0.0.6
 // @grant         none
-// @updateURL     https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/blob/master/Storyteller_VM.js
 // ==/UserScript==
 (function () {
     'use strict';
@@ -24,9 +23,10 @@
     let story;//textarea内容
     let story_arr = [];//story分段
     let index;//小说分段
-    let interval;//定时器
+    let interval;//小说定时器
+    let danmu_interval;//等待弹幕div加载定时器
     let color_box = [];//禁止的弹幕颜色
-    let div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];//网页弹幕div
+    let div_manmu;//网页弹幕div
 
     init();//初始化
 
@@ -81,19 +81,25 @@
                 }
             }
         };
-        div_manmu.addEventListener('DOMNodeInserted', function () {
-            let len = div_manmu.childNodes.length;
-            for (let i = 0; i < len; i++){
-                if(div_manmu.childNodes[i].style.display === 'none')
-                    continue;
-                for (let j = 0; j < color_box.length; j++){
-                    if(div_manmu.childNodes[i].style.color === color_box[j]){
-                        div_manmu.childNodes[i].style.display = 'none';
-                        break;
+        danmu_interval = setInterval(() => {
+            if(document.getElementsByClassName('danmu-6e95c1')[0].childNodes.length){
+                div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];
+                div_manmu.addEventListener('DOMNodeInserted', function () {
+                    let len = div_manmu.childNodes.length;
+                    for (let i = 0; i < len; i++){
+                        if(div_manmu.childNodes[i].style.display === 'none')
+                            continue;
+                        for (let j = 0; j < color_box.length; j++){
+                            if(div_manmu.childNodes[i].style.color === color_box[j]){
+                                div_manmu.childNodes[i].style.display = 'none';
+                                break;
+                            }
+                        }
                     }
-                }
+                },false);
+                clearInterval(danmu_interval);
             }
-        },false);
+        }, 1000);
     }
 //发射弹幕
     function run() {
