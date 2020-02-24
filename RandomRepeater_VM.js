@@ -28,12 +28,12 @@
 
 //核心功能函数
     function init() {
-        div1.id = 'DuLunChe';
-        div1.id = 'DuLunChe1';
+        div1.id = 'DuLunChe2';
+        div1.id = 'DuLunChe3';
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '复读机控制台';
-        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang" style="background-color: #FFFFFF;">隐藏控制台</button></div>';
+        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><button id="DuLunCheBtn1" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang1" style="background-color: #FFFFFF;">隐藏控制台</button>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
@@ -43,11 +43,11 @@
         };
         document.body.appendChild(div1);
         document.body.appendChild(div2);
-        document.getElementById('DuLunCheYinCang').onclick = () => {
+        document.getElementById('DuLunCheYinCang1').onclick = () => {
             div2.style.setProperty('display','none');
         };
-        document.getElementById('DuLunCheBtn').onclick = () => {
-            if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
+        document.getElementById('DuLunCheBtn1').onclick = () => {
+            if(document.getElementById('DuLunCheBtn1').innerText === '出动！') run();
             else finish();
         };
         danmu_interval = setInterval(() => {
@@ -68,12 +68,12 @@
     function run() {
         let btn = document.getElementsByClassName('ChatSend-button')[0];
         let txt = document.getElementsByClassName('ChatSend-txt')[0];
-        document.getElementById('DuLunCheBtn').innerText = '中止';
-        cycle_time = parseInt(document.getElementById('DuLunCheTime').value);
+        document.getElementById('DuLunCheBtn1').innerText = '中止';
+        cycle_time = parseInt(document.getElementById('DuLunCheTime1').value);
         if(cycle_time <= 2999) {
             alert('请珍惜账号 加大发言间隔！');
             finish();
-            document.getElementById('DuLunCheTime').value = '9999';
+            document.getElementById('DuLunCheTime1').value = '9999';
             return;
         }
         interval = setInterval(() => {
@@ -86,7 +86,7 @@
     }
 //结束发射
     function finish() {
-        document.getElementById('DuLunCheBtn').innerText = '出动！';
+        document.getElementById('DuLunCheBtn1').innerText = '出动！';
         clearInterval(interval);
     }
 })();
