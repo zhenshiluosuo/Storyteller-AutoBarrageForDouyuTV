@@ -6,4 +6,5 @@
 插件版：https://greasyfork.org/zh-CN/scripts/396285-%E7%8B%AC%E8%BD%AE%E8%BD%A6-%E8%AF%B4%E4%B9%A6%E4%BA%BA%E8%87%AA%E5%8A%A8%E5%BC%B9%E5%B9%95%E5%8F%91%E5%B0%84%E5%99%A8
 
 #新增功能：屏蔽白绿粉字，多条循环轮发
+
 RandomRepeater_VM.js 是随机弹幕复读机 拒绝12306，13703和2561707之外的房间号使用
