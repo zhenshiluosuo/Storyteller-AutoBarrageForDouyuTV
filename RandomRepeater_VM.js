@@ -71,7 +71,7 @@
                             _ready = true;
                         }
                     }else{
-                        sentence = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName Barrage-nickName--blue js-nick')[0].innerText;
+                        sentence = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName')[0].innerText;
                         _ready = true;
                     }
                 },false);
