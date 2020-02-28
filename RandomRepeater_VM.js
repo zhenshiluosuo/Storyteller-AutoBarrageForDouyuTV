@@ -64,14 +64,9 @@
                 div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];
                 div_wenzi = document.getElementById('js-barrage-list');
                 div_manmu.addEventListener('DOMNodeInserted', function () {
-                    if(!_mode){//如果是套娃模式 不需要找句子
-                        let len = div_manmu.childNodes.length;
-                        if(len){
-                            sentence = div_manmu.childNodes[Math.floor((Math.random() * len))].innerText;
-                            _ready = true;
-                        }
-                    }else{
-                        sentence = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText;
+                    let len = div_manmu.childNodes.length;
+                    if(len){
+                        sentence = div_manmu.childNodes[Math.floor((Math.random() * len))].innerText;
                         _ready = true;
                     }
                 },false);
@@ -93,7 +88,12 @@
         }
         interval = setInterval(() => {
             if(txt.value === '' && _ready && btn.innerHTML === '发送'){//输入框中有内容时等待用户发送完成后再继续
-                txt.value = sentence;
+                if(_mode){
+                    txt.value = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText;
+                }else{
+                    txt.value = sentence;
+                }
+
                 btn.click();
                 _ready = false;
             }
