@@ -35,7 +35,7 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '复读机控制台';
-        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><button id="DuLunCheBtn1" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang1" style="background-color: #FFFFFF;">隐藏控制台</button><div style="font-size: 75%;color: black;float: left;">套娃模式：<input type="checkbox" id="dlc_btn1" value="0" /></div>';
+        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><button id="DuLunCheBtn1" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang1" style="background-color: #FFFFFF;">隐藏控制台</button><div style="font-size: 75%;color: black;float: left;">套娃模式：<input type="checkbox" id="dlc_btn99" value="0" /></div>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
@@ -52,8 +52,8 @@
             if(document.getElementById('DuLunCheBtn1').innerText === '出动！') run();
             else finish();
         };
-        document.getElementById('dlc_btn1').onclick = () => {
-            if(document.getElementById('dlc_btn1').checked){
+        document.getElementById('dlc_btn99').onclick = () => {
+            if(document.getElementById('dlc_btn99').checked){
                 _mode = true;
             }else{
                 _mode = false;
@@ -64,10 +64,15 @@
                 div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];
                 div_wenzi = document.getElementById('js-barrage-list');
                 div_manmu.addEventListener('DOMNodeInserted', function () {
-                    let len = div_manmu.childNodes.length;
-                    if(len){
-                        sentence = div_manmu.childNodes[Math.floor((Math.random() * len))].innerText;
+                    if(_mode){
+                        sentence = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText;
                         _ready = true;
+                    }else{
+                        let len = div_manmu.childNodes.length;
+                        if(len){
+                            sentence = div_manmu.childNodes[Math.floor((Math.random() * len))].innerText;
+                            _ready = true;
+                        }
                     }
                 },false);
                 clearInterval(danmu_interval);
@@ -88,12 +93,7 @@
         }
         interval = setInterval(() => {
             if(txt.value === '' && _ready && btn.innerHTML === '发送'){//输入框中有内容时等待用户发送完成后再继续
-                if(_mode){
-                    txt.value = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText;
-                }else{
-                    txt.value = sentence;
-                }
-
+                txt.value = sentence;
                 btn.click();
                 _ready = false;
             }
