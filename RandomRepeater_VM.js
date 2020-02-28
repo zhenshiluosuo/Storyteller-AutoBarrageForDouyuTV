@@ -5,7 +5,7 @@
 // @author        闪光魔法师
 // @description   适配斗鱼直播平台的自动弹幕发射器 随机复制复读机 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
-// @version       0.0.1
+// @version       0.0.2
 // @grant         none
 // ==/UserScript==
 (function () {
@@ -14,8 +14,8 @@
     let tip = false;
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
-    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 75px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 20%;'
-    let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 100px;height: 70px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 20%;display: none;';
+    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 75px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 65%;'
+    let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 100px;height: 70px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 65%;display: none;';
     let cycle_time;//弹幕周期，单位毫秒 建议设定至6000毫秒以上 过低有系统屏蔽风险
     let _cycle_time = 1000;//弹幕div定时器
     let sentence;//复制的弹幕
@@ -23,6 +23,8 @@
     let danmu_interval;//等待弹幕div加载定时器
     let _ready = false;//弹幕div加载标记
     let div_manmu;//网页弹幕div
+    let div_wenzi;//网页聊天室div
+    let _mode = false;//套娃模式标记
 
     init();//初始化
 
@@ -33,12 +35,12 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '复读机控制台';
-        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><button id="DuLunCheBtn1" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang1" style="background-color: #FFFFFF;">隐藏控制台</button>';
+        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><button id="DuLunCheBtn1" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang1" style="background-color: #FFFFFF;">隐藏控制台</button><div style="font-size: 75%;color: black;float: left;">套娃模式：<input type="checkbox" id="dlc_btn1" value="0" /></div>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
                 tip = true;
-                alert('本插件由斗鱼用户重载操作符制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 有问题可以私信斗鱼重载操作符，为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟github打个星星吧~求求了！！！');
+                alert('本插件由斗鱼用户重载操作符制作，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 有问题请私信斗鱼重载操作符，为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟github打个星星吧~求求了！！！');
             }
         };
         document.body.appendChild(div1);
@@ -50,13 +52,26 @@
             if(document.getElementById('DuLunCheBtn1').innerText === '出动！') run();
             else finish();
         };
+        document.getElementById('dlc_btn1').onclick = () => {
+            if(document.getElementById('dlc_btn1').checked){
+                _mode = true;
+            }else{
+                _mode = false;
+            }
+        };
         danmu_interval = setInterval(() => {
             if(document.getElementsByClassName('danmu-6e95c1')[0].childNodes.length){
                 div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];
+                div_wenzi = document.getElementById('js-barrage-list');
                 div_manmu.addEventListener('DOMNodeInserted', function () {
-                    let len = div_manmu.childNodes.length;
-                    if(len){
-                        sentence = div_manmu.childNodes[Math.floor((Math.random() * len))].innerText;
+                    if(!_mode){//如果是套娃模式 不需要找句子
+                        let len = div_manmu.childNodes.length;
+                        if(len){
+                            sentence = div_manmu.childNodes[Math.floor((Math.random() * len))].innerText;
+                            _ready = true;
+                        }
+                    }else{
+                        sentence = '@' + div_wenzi.childNodes[list1.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText + div_wenzi.childNodes[list1.childNodes.length - 1].getElementsByClassName('Barrage-nickName Barrage-nickName--blue js-nick')[0].innerText;
                         _ready = true;
                     }
                 },false);
