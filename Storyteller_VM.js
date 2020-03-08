@@ -15,13 +15,14 @@
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
     let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;'
-    let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 160px;height: 370px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;display: none;';
+    let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;display: none;';
     let max_danmu_long = 43;//弹幕字数限制
     const min_danmu_long = 20;//最小弹幕长度
     const error_danmu_long = 30;//防止无法断句弹幕长度
     let cycle_time;//弹幕周期，单位毫秒 建议设定至6000毫秒以上 过低有系统屏蔽风险
     let story;//textarea内容
     let story_arr = [];//story分段
+    let time_arr = [];//时间记录
     let index;//小说分段
     let interval;//小说定时器
     let danmu_interval;//等待弹幕div加载定时器
@@ -37,7 +38,7 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '独轮车控制台';
-        div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div><div style="font-size: 75%;color: black;float: left;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>屏蔽主播狗叫：功能正在开发中</div>';
+        div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div><div style="font-size: 75%;color: black;float: left;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>屏蔽主播狗叫：功能正在开发中</div>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
@@ -131,7 +132,46 @@
                     }
                 }
             }, cycle_time);
-        }else {
+        } else if(_value === '3'){
+            let temp_arr = story.split('\n');
+            if(temp_arr.length % 2){
+                alert('程序存在错误！请检查是否有多余的回车或内容与时间是否对应');
+                finish();
+            }else{
+                for(let i = 0; i < temp_arr.length; i++){
+                    if(i % 2){
+                        if(temp_arr[i].length > 43){
+                            temp_arr[i] = temp_arr[i].substr(0,43);
+                        }
+                        story_arr.push(temp_arr[i]);
+                    }else{
+                        let time_temp = parseInt(temp_arr[i]);
+                        if(!time_temp || time_temp < 3000){
+                            alert('程序存在错误！请检查时间格式或等待时间是否小于3000毫秒或者是否过大');
+                            finish();
+                            break;
+                        }
+                        time_arr.push(time_temp);
+                    }
+                }
+                index = 0;
+                while (document.getElementById('DuLunCheBtn').innerText === '中止'){
+                    if(index === story_arr.length){
+                        index = 0;
+                    }
+                    cycle_time = time_arr[index];
+                    interval = setInterval(() => {
+                        if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
+                            txt.value = story_arr[index++];
+                            if (btn.innerHTML === '发送') {
+                                btn.click();
+                                clearInterval(interval);
+                            }
+                        }
+                    }, cycle_time);
+                }
+            }
+        } else {
             if(_value === '1')
                 get_better_sentence();
             else
@@ -156,6 +196,7 @@
         document.getElementById('DuLunCheBtn').innerText = '出动！';
         clearInterval(interval);
         story_arr = [];
+        time_arr = [];
     }
 //小说分段
     function get_better_sentence() {
