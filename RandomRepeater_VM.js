@@ -101,7 +101,7 @@
         let txt = document.getElementsByClassName('ChatSend-txt')[0];
         document.getElementById('DuLunCheBtn1').innerText = '中止';
         cycle_time = parseInt(document.getElementById('DuLunCheTime1').value);
-        if(cycle_time <= 2999) {
+        if(cycle_time <= 2999 || !cycle_time) {
             alert('请珍惜账号 加大发言间隔！');
             finish();
             document.getElementById('DuLunCheTime1').value = '9999';
