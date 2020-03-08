@@ -106,10 +106,12 @@
     function run() {
         let btn = document.getElementsByClassName('ChatSend-button')[0];
         let txt = document.getElementsByClassName('ChatSend-txt')[0];
+        let _value = document.getElementById('DuLunCheSelect').value;
         document.getElementById('DuLunCheBtn').innerText = '中止';
         story = document.getElementById('DuLunCheText').value;
         cycle_time = parseInt(document.getElementById('DuLunCheTime').value);
-        if(!story.length || !cycle_time){
+        if(_value === '3'){
+        }else if(!story.length || !cycle_time){
             alert('请勿空置运行！');
             finish();
             return;
@@ -119,7 +121,6 @@
             document.getElementById('DuLunCheTime').value = '9999';
             return;
         }
-        let _value = document.getElementById('DuLunCheSelect').value;
         if(_value === '0') {
             if (story.length > max_danmu_long){
                 story = story.slice(0,max_danmu_long + 1);
@@ -155,21 +156,22 @@
                     }
                 }
                 index = 0;
-                while (document.getElementById('DuLunCheBtn').innerText === '中止'){
+                function _f(){
                     if(index === story_arr.length){
                         index = 0;
                     }
-                    cycle_time = time_arr[index];
-                    interval = setInterval(() => {
-                        if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
-                            txt.value = story_arr[index++];
-                            if (btn.innerHTML === '发送') {
-                                btn.click();
-                                clearInterval(interval);
-                            }
+                    if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
+                        txt.value = story_arr[index];
+                        if (btn.innerHTML === '发送') {
+                            btn.click();
+                            clearInterval(interval);
+                            cycle_time = time_arr[index++];
+                            interval = setInterval(_f, cycle_time);
                         }
-                    }, cycle_time);
+                    }
                 }
+                cycle_time = time_arr[index];
+                interval = setInterval(_f, cycle_time);
             }
         } else {
             if(_value === '1')
