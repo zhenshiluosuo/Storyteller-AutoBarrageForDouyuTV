@@ -73,7 +73,7 @@
                 div_wenzi = document.getElementById('js-barrage-list');
                 div_manmu.addEventListener('DOMNodeInserted', function () {
                     if(_mode){
-                        if(__mode && 'Barrage-content' === document.getElementsByClassName('Barrage-content')[0].className){
+                        if(__mode && 'Barrage-content' === div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].className){
                             return;
                         }
                         sentence = '@' + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-nickName')[0].innerText + div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].innerText;
