@@ -61,7 +61,7 @@
             }
         };
         document.getElementById('dlc_btn98').onclick = () => {
-            if(document.getElementById('dlc_btn99').checked){
+            if(document.getElementById('dlc_btn98').checked){
                 __mode = true;
             }else{
                 __mode = false;
@@ -83,10 +83,10 @@
                         let len = div_manmu.childNodes.length;
                         if(len){
                             let _temp = div_manmu.childNodes[Math.floor((Math.random() * len))];
-                            sentence = _temp.innerText;
                             let _color = _temp.style.color;
                             if(!__mode || (__mode && _color.length)){
                                 _ready = true;
+                                sentence = _temp.innerText;
                             }
                         }
                     }
