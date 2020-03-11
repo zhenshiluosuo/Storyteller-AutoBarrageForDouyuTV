@@ -14,11 +14,11 @@
     let tip = false;
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
-    let css1 = 'background: #FFB5C5;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 72%;'
-    let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 100px;height: 90px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 72%;display: none;';
+    let css1 = 'background: #FFB5C5;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 72%;'
+    let css2 = 'background: #ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 110px;height: 95px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 72%;display: none;';
     let cycle_time;//弹幕周期，单位毫秒 建议设定至6000毫秒以上 过低有系统屏蔽风险
-    let _cycle_time = 1000;//弹幕div定时器
-    let sentence;//复制的弹幕
+    let _cycle_time = 800;//弹幕div定时器
+    let sentence = "";//复制的弹幕
     let interval;//发射定时器
     let danmu_interval;//等待弹幕div加载定时器
     let _ready = false;//弹幕div加载标记
@@ -26,6 +26,7 @@
     let div_wenzi;//网页聊天室div
     let _mode = false;//套娃模式标记
     let __mode = false;//复读白字标记
+    let ___mode = false;//重复复读标记
 
     init();//初始化
 
@@ -36,7 +37,7 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '复读机控制台';
-        div2.innerHTML = '<input type="text" style="width: 80px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><button id="DuLunCheBtn1" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYinCang1" style="background-color: #FFFFFF;">隐藏控制台</button><div style="font-size: 75%;color: black;float: left;">套娃模式：<input type="checkbox" id="dlc_btn99" value="0" /><br>不复读白字：<input type="checkbox" id="dlc_btn98" value="0" /></div>';
+        div2.innerHTML = '<input type="text" style="width: 100px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><div style="font-size: 10px;margin-bottom: 2px;"><button id="DuLunCheBtn1" style="display: inline-block; background: #f70; color: #FFFFFF; width:50px; height: 25px; margin: 1px;">出动！</button><button id="DuLunCheYinCang1" style="display: inline-block; background: #f70; color: #FFFFFF; width:50px; height: 25px; margin: 1px;">隐藏控制台</div></button><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>套娃模式：</span><input type="checkbox" id="dlc_btn99" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>不复读白字：</span><input type="checkbox" id="dlc_btn98" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>不重复复读：</span><input type="checkbox" id="dlc_btn97" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
@@ -67,11 +68,19 @@
                 __mode = false;
             }
         };
+        document.getElementById('dlc_btn98').onclick = () => {
+            if(document.getElementById('dlc_btn98').checked){
+                ___mode = true;
+            }else{
+                ___mode = false;
+            }
+        };
         danmu_interval = setInterval(() => {
             if(document.getElementsByClassName('danmu-6e95c1')[0].childNodes.length){
                 div_manmu = document.getElementsByClassName('danmu-6e95c1')[0];
                 div_wenzi = document.getElementById('js-barrage-list');
                 div_manmu.addEventListener('DOMNodeInserted', function () {
+                    let _sentence = sentence;
                     if(_mode){
                         if(__mode && 'Barrage-content' === div_wenzi.childNodes[div_wenzi.childNodes.length - 1].getElementsByClassName('Barrage-content')[0].className){
                             return;
@@ -88,6 +97,11 @@
                                 _ready = true;
                                 sentence = _temp.innerText;
                             }
+                        }
+                    }
+                    if(___mode && _ready){
+                        if(_sentence === sentence){
+                            _ready = false;
                         }
                     }
                 },false);
