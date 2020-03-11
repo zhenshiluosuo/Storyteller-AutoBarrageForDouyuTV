@@ -5,7 +5,7 @@
 // @author        闪光魔法师
 // @description   适配斗鱼直播平台的自动弹幕发射器 随机复制复读机 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
-// @version       0.0.3
+// @version       0.1.0
 // @grant         none
 // ==/UserScript==
 (function () {
@@ -15,7 +15,7 @@
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
     let css1 = 'background: #FFB5C5;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 72%;'
-    let css2 = 'background: #ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 110px;height: 95px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 72%;display: none;';
+    let css2 = 'background: #ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 110px;height: 100px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 72%;display: none;';
     let cycle_time;//弹幕周期，单位毫秒 建议设定至6000毫秒以上 过低有系统屏蔽风险
     let _cycle_time = 800;//弹幕div定时器
     let sentence = "";//复制的弹幕
@@ -37,7 +37,7 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '复读机控制台';
-        div2.innerHTML = '<input type="text" style="width: 100px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><div style="font-size: 10px;margin-bottom: 2px;"><button id="DuLunCheBtn1" style="display: inline-block; background: #f70; color: #FFFFFF; width:50px; height: 25px; margin: 1px;">出动！</button><button id="DuLunCheYinCang1" style="display: inline-block; background: #f70; color: #FFFFFF; width:50px; height: 25px; margin: 1px;">隐藏控制台</div></button><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>套娃模式：</span><input type="checkbox" id="dlc_btn99" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>不复读白字：</span><input type="checkbox" id="dlc_btn98" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>不重复复读：</span><input type="checkbox" id="dlc_btn97" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div>';
+        div2.innerHTML = '<input type="text" style="width: 100px" placeholder="间隔时间(ms)" id="DuLunCheTime1"/><div style="font-size: 10px;margin-bottom: 2px;"><button id="DuLunCheBtn1" style="display: inline-block; background: #f70; color: #FFFFFF; width:50px; height: 25px; margin: 1px;">出动</button><button id="DuLunCheYinCang1" style="display: inline-block; background: #f70; color: #FFFFFF; width:50px; height: 25px; margin: 1px;">隐藏</div></button><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>套娃模式：</span><input type="checkbox" id="dlc_btn99" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>不复读白字：</span><input type="checkbox" id="dlc_btn98" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div><div style="color: black;float: left;width: 100%;font-size: 75%;"><span>不重复复读：</span><input type="checkbox" id="dlc_btn97" value="0" style="display: block;position: relative;float: right;margin-right: 20px;"/></div>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
@@ -51,7 +51,7 @@
             div2.style.setProperty('display','none');
         };
         document.getElementById('DuLunCheBtn1').onclick = () => {
-            if(document.getElementById('DuLunCheBtn1').innerText === '出动！') run();
+            if(document.getElementById('DuLunCheBtn1').innerText === '出动') run();
             else finish();
         };
         document.getElementById('dlc_btn99').onclick = () => {
@@ -131,7 +131,7 @@
     }
 //结束发射
     function finish() {
-        document.getElementById('DuLunCheBtn1').innerText = '出动！';
+        document.getElementById('DuLunCheBtn1').innerText = '出动';
         clearInterval(interval);
     }
 })();
