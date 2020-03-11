@@ -5,7 +5,7 @@
 // @author        闪光魔法师
 // @description   适配斗鱼直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
-// @version       0.0.7
+// @version       0.1.0
 // @grant         none
 // ==/UserScript==
 (function () {
@@ -14,8 +14,8 @@
     let tip = false;
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
-    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;'
-    let css2 = 'background: #E5E4E4;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;border-color: #FFFFFF;border: 3px;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-top-left-radius: 4px;border-top-right-radius: 4px;right: 10px;top: 30%;display: none;';
+    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 30%;'
+    let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 30%;display: none;';
     let max_danmu_long = 43;//弹幕字数限制
     const min_danmu_long = 20;//最小弹幕长度
     const error_danmu_long = 30;//防止无法断句弹幕长度
@@ -38,7 +38,7 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div1.innerHTML = '独轮车控制台';
-        div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" id="DuLunCheTime"/><button id="DuLunCheBtn" style="background-color: #FFFFFF;">出动！</button><br><button id="DuLunCheYincang" style="background-color: #FFFFFF;">隐藏控制台</button></div><div style="font-size: 75%;color: black;float: left;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>屏蔽主播狗叫：功能正在开发中</div>';
+        div2.innerHTML = '<select id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option></select><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏控制台</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br><span style:"display: block;">屏蔽主播狗叫：功能开发中</span></div>';
         div1.onclick = () => {
             div2.style.setProperty('display','block');
             if(!tip){
@@ -52,7 +52,7 @@
             div2.style.setProperty('display','none');
         };
         document.getElementById('DuLunCheBtn').onclick = () => {
-            if(document.getElementById('DuLunCheBtn').innerText === '出动！') run();
+            if(document.getElementById('DuLunCheBtn').innerText === '出动') run();
             else finish();
         };
         document.getElementById('dlc_btn1').onclick = () => {
@@ -194,7 +194,7 @@
     }
 //结束发射
     function finish() {
-        document.getElementById('DuLunCheBtn').innerText = '出动！';
+        document.getElementById('DuLunCheBtn').innerText = '出动';
         clearInterval(interval);
         story_arr = [];
         time_arr = [];
