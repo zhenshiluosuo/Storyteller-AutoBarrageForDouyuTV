@@ -5,9 +5,9 @@
 
 插件版：https://greasyfork.org/zh-CN/scripts/396285
 
-#新增功能：屏蔽白绿粉字，多条循环轮发
+#新增功能：屏蔽白绿粉字，多条循环轮发，编程模式
 
-RandomRepeater_VM.js 是随机弹幕复读机 
+RandomRepeater_VM.js 是随机弹幕复读机 ，可选自动套娃功能，不复读白字功能
 插件版：https://greasyfork.org/zh-CN/scripts/396928
 
 
