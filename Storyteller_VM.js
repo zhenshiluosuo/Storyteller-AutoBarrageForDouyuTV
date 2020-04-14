@@ -5,7 +5,7 @@
 // @author        闪光魔法师
 // @description   适配斗鱼直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
-// @version       0.1.0
+// @version       0.1.1
 // @grant         none
 // ==/UserScript==
 (function () {
