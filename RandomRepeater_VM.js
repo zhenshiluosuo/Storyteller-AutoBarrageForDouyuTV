@@ -14,7 +14,7 @@
     let tip = false;
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
-    let css1 = 'background: #FFB5C5;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 72%;'
+    let css1 = 'background: #FFB5C5;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 72%;';
     let css2 = 'background: #ffffff;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 110px;height: 95px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 72%;display: none;';
     let cycle_time;//弹幕周期，单位毫秒 建议设定至6000毫秒以上 过低有系统屏蔽风险
     let _cycle_time = 800;//弹幕div定时器
