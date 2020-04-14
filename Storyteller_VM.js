@@ -21,8 +21,6 @@
     let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 155px;height: 335px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 33%;display: none;';
     let div2_innerHTML1 = '<div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option></select><div id="dlcSetting1" style="display:inline-block;position:relative;width:19px;height: 19px;background-image: url(https://shark2.douyucdn.cn/front-publish/live-master/assets/images/guessHeadIcon_new_3e70beb.png);background-position: -158px 0px;cursor: pointer;float:right;margin-right: 5px;""></div></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏控制台</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br><span style:"display: block;">屏蔽主播狗叫：功能开发中</span></div>';
     let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
-    let btn = document.getElementsByClassName('ChatSend-button')[0];
-    let txt = document.getElementsByClassName('ChatSend-txt')[0];
     let max_danmu_long = 43;//弹幕字数限制
     const min_danmu_long = 20;//最小弹幕长度
     const error_danmu_long = 30;//防止无法断句弹幕长度
@@ -118,18 +116,18 @@
             document.getElementById('dlcCount3').value = "" + (parseInt(document.getElementById('dlcCount3').value) + 1);
         };
         document.getElementById('dlcCountBtn3').onclick = () => {
-            if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
-                txt.value = document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount1').value + "/" + document.getElementById('dlcCount2').value;
-                if (btn.innerHTML === '发送') {
-                    btn.click();
+            if(document.getElementsByClassName('ChatSend-txt')[0].value === ''){//输入框中有内容时等待用户发送完成后再继续
+                document.getElementsByClassName('ChatSend-txt')[0].value = document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount1').value + "/" + document.getElementById('dlcCount2').value;
+                if (document.getElementsByClassName('ChatSend-button')[0].innerHTML === '发送') {
+                    document.getElementsByClassName('ChatSend-button')[0].click();
                 }
             }
         };
         document.getElementById('dlcCountBtn6').onclick = () => {
-            if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
-                txt.value = document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount3').value + document.getElementById('dlcCountUnit').value;
-                if (btn.innerHTML === '发送') {
-                    btn.click();
+            if(document.getElementsByClassName('ChatSend-txt')[0].value === ''){//输入框中有内容时等待用户发送完成后再继续
+                document.getElementsByClassName('ChatSend-txt')[0].value = document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount3').value + document.getElementById('dlcCountUnit').value;
+                if (document.getElementsByClassName('ChatSend-button')[0].innerHTML === '发送') {
+                    document.getElementsByClassName('ChatSend-button')[0].click();
                 }
             }
         };
@@ -162,6 +160,8 @@
     }
 //发射弹幕
     function run() {
+        let btn = document.getElementsByClassName('ChatSend-button')[0];
+        let txt = document.getElementsByClassName('ChatSend-txt')[0];
         let _value = document.getElementById('DuLunCheSelect').value;
         document.getElementById('DuLunCheBtn').innerText = '中止';
         story = document.getElementById('DuLunCheText').value;
