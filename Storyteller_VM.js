@@ -5,7 +5,7 @@
 // @author        闪光魔法师
 // @description   适配斗鱼直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
-// @version       0.1.2
+// @version       0.1.7
 // @grant         none
 // ==/UserScript==
 (function () {
@@ -19,7 +19,7 @@
     let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 30%;'
     let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 30%;display: none;';
     let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 155px;height: 335px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 33%;display: none;';
-    let div2_innerHTML1 = '<div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option></select><div id="dlcSetting1" style="display:inline-block;position:relative;width:19px;height: 19px;background-image: url(https://shark2.douyucdn.cn/front-publish/live-master/assets/images/guessHeadIcon_new_3e70beb.png);background-position: -158px 0px;cursor: pointer;float:right;margin-right: 5px;""></div></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏控制台</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br><span style:"display: block;">屏蔽主播狗叫：功能开发中</span></div>';
+    let div2_innerHTML1 = '<div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option></select><div id="dlcSetting1" style="display:inline-block;position:relative;width:19px;height: 19px;background-image: url(https://shark2.douyucdn.cn/front-publish/live-master/assets/images/guessHeadIcon_new_3e70beb.png);background-position: -158px 0px;cursor: pointer;float:right;margin-right: 5px;""></div></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入内容" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏控制台</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
     let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
     let max_danmu_long = 43;//弹幕字数限制
     const min_danmu_long = 20;//最小弹幕长度
@@ -34,6 +34,8 @@
     let color_box = [];//禁止的弹幕颜色
     let div_manmu;//网页弹幕div
     let select_flag = false;//功能标记
+    let danmu_helperX = false;//应急弹幕标记
+    let danmu_count = 0;
     init();//初始化
 
 //核心功能函数
@@ -88,6 +90,13 @@
                 for (let i = 0; i < color_box.length; i++){
                     if(color_box[i] === 'rgb(246, 68, 127)') {color_box.splice(i, 1); break;}
                 }
+            }
+        };
+        document.getElementById('dlc_btn4').onclick = () => {
+            if(document.getElementById('dlc_btn4').checked){
+                danmu_helperX = true;
+            }else{
+                danmu_helperX = false;
             }
         };
         document.getElementById('dlcSetting1').onmouseover = () => {
@@ -157,6 +166,80 @@
                 clearInterval(danmu_interval);
             }
         }, 1000);
+        //关闭广告
+        let ad_i1 = setInterval(() => {
+            if(document.getElementsByClassName('liveosTag_1Z4iZj')[0].childNodes.length){
+                document.getElementsByClassName('liveosTag_1Z4iZj')[0].style.display = 'none';//关手游广告
+                clearInterval(ad_i1);
+            }
+        },1000);
+        let ad_i2= setInterval(() => {
+            if(document.getElementsByClassName('Bottom-ad')[0].childNodes.length){
+                document.getElementsByClassName('Bottom-ad')[0].style.display = 'none';//关底部广告栏
+                clearInterval(ad_i2);
+            }
+        },1000);
+        //应急弹幕
+        let danmu_helper_i = setInterval(() => {
+            if(document.getElementsByClassName('Barrage-list')[0].childElementCount){
+                let danmu_css = `
+                    <style>
+                    .danmu1 {
+                        margin: 5px;
+                        height: 30px;
+                        font-size: 25px;
+                        font-weight: bold;
+                        color: white;
+                        position: absolute;
+                        visibility: hidden;
+                        animation: move1 8s linear;
+                        -webkit-animation-name: move1 8s linear;
+                    }
+                    @keyframes move1 {
+                        0% {
+                            visibility: visible;
+                            transform: translateX(1250px);
+                            -webkit-transform: translateX(1250px);
+                        }
+                        100% {
+                            visibility: visible;
+                            transform: translateX(-400px);
+                            -webkit-transform: translateX(-400px);
+                        }
+             
+                    }
+                    </style>`;
+                let ele = document.createElement('div');
+                ele.innerHTML = danmu_css;
+                document.getElementsByTagName('head')[0].appendChild(ele.firstElementChild);//注入css
+                let danmu_parent = document.createElement('div');
+                danmu_parent.id = 'div_20200604';
+                danmu_parent.style.width = '100%';
+                danmu_parent.style.height='92%';
+                danmu_parent.style.position='absolute';
+                document.getElementsByClassName('layout-Player-videoMain')[0].appendChild(danmu_parent);
+                clearInterval(danmu_helper_i);
+                document.getElementsByClassName('Barrage-list')[0].addEventListener('DOMNodeInserted', () => {
+                    if(danmu_helperX){
+                        let danmu_text = document.getElementsByClassName('Barrage-list')[0].lastChild.getElementsByClassName('Barrage-content')[0].innerText;
+                        let danmu_div = document.createElement('div');
+                        danmu_div.style.width = '' + danmu_text.length * 25 + 'px';
+                        danmu_div.innerHTML = danmu_text;
+                        if(danmu_parent.childElementCount){
+                            danmu_div.style.top = '' + (++danmu_count % 12 * 30) + 'px';
+                        }else{
+                            danmu_count = 0;
+                        }
+                        danmu_div.classList.add("danmu1");
+                        danmu_parent.appendChild(danmu_div);
+                        setTimeout(() => {
+                            danmu_parent.removeChild(danmu_div);
+                        },8000);
+                    }
+                })
+
+            }
+        },1000)
     }
 //发射弹幕
     function run() {
