@@ -5,11 +5,9 @@
 
 插件版：https://greasyfork.org/zh-CN/scripts/396285
 
-#新增功能：屏蔽白绿粉字，多条循环轮发，编程模式，计数器
+#新增功能：屏蔽白绿粉字，多条循环轮发，编程模式，计数器，临时应急弹幕
 
 RandomRepeater_VM.js 是随机弹幕复读机 ，可选自动套娃功能，不复读白字功能，不重复复读功能
 
 插件版：https://greasyfork.org/zh-CN/scripts/396928
 
-
-有问题斗鱼请私信 重载操作符
