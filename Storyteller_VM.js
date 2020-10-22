@@ -1,21 +1,19 @@
 // ==UserScript==
 // @icon          https://www.douyu.com/favicon.ico
 // @name          独轮车-说书人自动弹幕发射器
-// @namespace     https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
-// @author        闪光魔法师
-// @description   适配斗鱼/虎牙直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
+// @namespace     https://greasyfork.org/scripts/396285
+// @author        软中居士
+// @description   适配斗鱼/虎牙/b站/ytb直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
 // @match         *://www.huya.com/*
 // @match         *://live.bilibili.com/*
-// @version       0.2.0
-// @run-at        document-start
-// @connect       passport.bilibili.com
-// @connect       api.live.bilibili.com
-// @connect       live-trace.bilibili.com
-// @connect       sc.ftqq.com
-// @require       https://cdn.jsdelivr.net/gh/andywang425/BLTH@15aa2fc80e8331a704f724d700e855022368381d/modules/BilibiliAPI_Mod.min.js
-// @grant         none
-// @namespace     https://greasyfork.org/scripts/396285
+// @match         *://www.youtube.com/*
+// @version       1.0.1
+// @license       MIT
+// @grant         unsafeWindow
+// @grant         GM_xmlhttpRequest
+// @grant         GM_getResourceText
+// @grant         GM_notification
 // ==/UserScript==
 (function () {
     'use strict';
@@ -25,10 +23,11 @@
     let div2 = document.createElement('div');//控制台
     let div3 = document.createElement('div');//计数器
     let div5 = document.createElement('div');//设置
-    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 30%;'
-    let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 998;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 30%;display: none;';
-    let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position: fixed;padding:5px;text-align:center;width: 155px;height: 335px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 33%;display: none;';
-    let div2_innerHTML1 = '<div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option></select><div id="dlcSetting1" style="display:inline-block;position:relative;width:19px;height: 19px;background-image: url(https://shark2.douyucdn.cn/front-publish/live-master/assets/images/guessHeadIcon_new_3e70beb.png);background-position: -158px 0px;cursor: pointer;float:right;margin-right: 5px;""></div></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合斗鱼的弹幕规范☆最重要的是！大伙不爱看烂活！" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
+    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 996;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 30%;'
+    let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 30%;display: none;';
+    let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;top: 7%;right: 1px;display: none;';
+    let css5 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;top: 7%;right: 1px;display: none;';
+    let div2_innerHTML1 = '<div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option></select><div id="dlcSetting1" style="display:inline-block;position:relative;width:19px;height: 19px;background-image: url(https://shark2.douyucdn.cn/front-publish/live-master/assets/images/guessHeadIcon_new_3e70beb.png);background-position: -158px 0px;cursor: pointer;float:right;margin-right: 5px;""></div></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合斗鱼的弹幕规范☆最重要的是！大伙不爱看烂活！⚠pilipili直播弹幕功能暂时有些问题，下个版本修复" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
     let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
     let max_danmu_long = 43;//弹幕字数限制
     let min_danmu_long = 18;//最小弹幕长度
@@ -43,14 +42,16 @@
     let color_box = [];//禁止的弹幕颜色
     let div_manmu;//网页弹幕div
     let select_flag = false;//功能标记
+    let radio_flag = false;
+    let radio_change_flag = false;
     let danmu_helperX = false;//应急弹幕标记
     let danmu_count = 0;
     let danmu_parent = null;
-    let website;//当前站点 0:斗鱼 1：虎牙 ...
-    let btn; //发送按钮
-    let txt; //输入框
-    let BAPI = BilibiliAPI; //BilibiliAPI，PC端抓包研究所得，原作者是SeaLoong。andywang425补充。
-    let roomId; //pilipili房间id
+    let website;//当前站点 0:斗鱼 1：虎牙 2:p站 3：ytb...
+    let btn = null; //发送按钮
+    let txt = null; //输入框
+    let dlc_radio_words; //热词
+    let ytb_iframe;//ytb直播右侧iframe
     init();//初始化
 
 //核心功能函数
@@ -68,13 +69,23 @@
             min_danmu_long = 8;
             error_danmu_long = 12;
             website = 2;
-            roomId = parseInt(window.location.pathname.slice(1).split('?')[0]);
+        } else if(url === 'www.youtube.com') {
+            if (window.top !== window.self) {
+                throw new Error('Frame error!');
+            }
+            max_danmu_long = 200;
+            min_danmu_long = 30;
+            error_danmu_long = 180;
+            website = 3;
         }
         div1.id = 'DuLunChe1';
         div2.id = 'DuLunChe2';
+        div3.id = 'dlc-select-window';
+        div5.id = 'dlc-radio-window';
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div3.style.cssText = css3;
+        div5.style.cssText = css5;
         div1.innerHTML = '独轮车控制台';
         div2.innerHTML = div2_innerHTML1;
         div3.innerHTML = div3_innerHTML1;
@@ -82,12 +93,13 @@
             div2.style.setProperty('display','block');
             if(!tip){
                 tip = true;
-                alert('欢迎使用说书人自动弹幕发射装置V3.0，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ ，NGA用户可以私信：飞天小协警 。多句转轮模式每句之间请用回车分隔，斗鱼字数限制43，为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！注：编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容，比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜，依此类推 注：部分功能可能在非斗鱼平台上无法使用');
+                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ ，NGA用户可以私信：飞天小协警 。多句转轮模式每句之间请用回车分隔，斗鱼字数限制43，为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！注：编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容，比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜，依此类推 注：部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
             }
         };
         document.body.appendChild(div1);
         document.body.appendChild(div2);
-        document.body.appendChild(div3);
+        div2.appendChild(div3);
+        div2.appendChild(div5);
         document.getElementById('DuLunCheYincang').onclick = () => {
             div2.style.setProperty('display','none');
         };
@@ -95,55 +107,23 @@
             if(document.getElementById('DuLunCheBtn').innerText === '出动') run();
             else finish();
         };
-        document.getElementById('dlc_btn1').onclick = () => {
-            if(document.getElementById('dlc_btn1').checked){
-                color_box.push('');
-            }else{
-                for (let i = 0; i < color_box.length; i++){
-                    if(color_box[i] === '') {color_box.splice(i, 1); break;}
-                }
-            }
-        };
-        document.getElementById('dlc_btn2').onclick = () => {
-            if(document.getElementById('dlc_btn2').checked){
-                color_box.push('rgb(102, 255, 0)');
-            }else{
-                for (let i = 0; i < color_box.length; i++){
-                    if(color_box[i] === 'rgb(102, 255, 0)') {color_box.splice(i, 1); break;}
-                }
-            }
-        };
-        document.getElementById('dlc_btn3').onclick = () => {
-            if(document.getElementById('dlc_btn3').checked){
-                color_box.push('rgb(246, 68, 127)');
-            }else{
-                for (let i = 0; i < color_box.length; i++){
-                    if(color_box[i] === 'rgb(246, 68, 127)') {color_box.splice(i, 1); break;}
-                }
-            }
-        };
-        document.getElementById('dlc_btn4').onclick = () => {
-            if(document.getElementById('dlc_btn4').checked){
-                danmu_helperX = true;
-                danmu_parent.style.setProperty('display','block');
-            }else{
-                danmu_helperX = false;
-                danmu_parent.style.setProperty('display','none');
-            }
-        };
-        document.getElementById('dlcSetting1').onmouseover = () => {
-            document.getElementById('dlcSetting1').style.backgroundPositionY="-28px";
-        };
-        document.getElementById('dlcSetting1').onmouseout = () => {
-            document.getElementById('dlcSetting1').style.backgroundPositionY="0px";
-        };
         document.getElementById('DuLunCheSelect').onchange = () => {
-            if(document.getElementById('DuLunCheSelect').value === '4'){
+            let s_value = document.getElementById('DuLunCheSelect').value;
+
+            if(s_value === '4'){
                 select_flag = true;
                 div3.style.setProperty('display','block');
-            }else if(select_flag){
+            } else if(s_value !== '4' && select_flag){
                 select_flag = false;
                 div3.style.setProperty('display','none');
+            }
+
+            if(s_value === '5'){
+                radio_flag = true;
+                div5.style.setProperty('display','block');
+            } else if(s_value !== '5' && radio_flag){
+                radio_flag = false;
+                div5.style.setProperty('display','none');
             }
         };
         document.getElementById('dlcCountBtn1').onclick = () => {
@@ -157,20 +137,12 @@
             document.getElementById('dlcCount3').value = "" + (parseInt(document.getElementById('dlcCount3').value) + 1);
         };
         document.getElementById('dlcCountBtn3').onclick = () => {
-            if(document.getElementsByClassName('ChatSend-txt')[0].value === ''){//输入框中有内容时等待用户发送完成后再继续
-                document.getElementsByClassName('ChatSend-txt')[0].value = document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount1').value + "/" + document.getElementById('dlcCount2').value;
-                if (document.getElementsByClassName('ChatSend-button')[0].innerHTML === '发送') {
-                    document.getElementsByClassName('ChatSend-button')[0].click();
-                }
+            openFire(document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount1').value + "/" + document.getElementById('dlcCount2').value);
+            if(txt === ''){//输入框中有内容时等待用户发送完成后再继续
             }
         };
         document.getElementById('dlcCountBtn6').onclick = () => {
-            if(document.getElementsByClassName('ChatSend-txt')[0].value === ''){//输入框中有内容时等待用户发送完成后再继续
-                document.getElementsByClassName('ChatSend-txt')[0].value = document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount3').value + document.getElementById('dlcCountUnit').value;
-                if (document.getElementsByClassName('ChatSend-button')[0].innerHTML === '发送') {
-                    document.getElementsByClassName('ChatSend-button')[0].click();
-                }
-            }
+            openFire(document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount3').value + document.getElementById('dlcCountUnit').value);
         };
         document.getElementById('dlcCountBtn0').onclick = () => {
             document.getElementById('DuLunCheCountText').value = "";
@@ -180,6 +152,50 @@
             document.getElementById('dlcCountUnit').value = "次";
         };
         if(!website) {
+            //斗鱼弹幕屏蔽相关
+            document.getElementById('dlc_btn1').onclick = () => {
+                if(document.getElementById('dlc_btn1').checked){
+                    color_box.push('');
+                }else{
+                    for (let i = 0; i < color_box.length; i++){
+                        if(color_box[i] === '') {color_box.splice(i, 1); break;}
+                    }
+                }
+            };
+            document.getElementById('dlc_btn2').onclick = () => {
+                if(document.getElementById('dlc_btn2').checked){
+                    color_box.push('rgb(102, 255, 0)');
+                }else{
+                    for (let i = 0; i < color_box.length; i++){
+                        if(color_box[i] === 'rgb(102, 255, 0)') {color_box.splice(i, 1); break;}
+                    }
+                }
+            };
+            document.getElementById('dlc_btn3').onclick = () => {
+                if(document.getElementById('dlc_btn3').checked){
+                    color_box.push('rgb(246, 68, 127)');
+                }else{
+                    for (let i = 0; i < color_box.length; i++){
+                        if(color_box[i] === 'rgb(246, 68, 127)') {color_box.splice(i, 1); break;}
+                    }
+                }
+            };
+            document.getElementById('dlc_btn4').onclick = () => {
+                if(document.getElementById('dlc_btn4').checked){
+                    danmu_helperX = true;
+                    danmu_parent.style.setProperty('display','block');
+                }else{
+                    danmu_helperX = false;
+                    danmu_parent.style.setProperty('display','none');
+                }
+            };
+            //右上设置按钮
+            document.getElementById('dlcSetting1').onmouseover = () => {
+                document.getElementById('dlcSetting1').style.backgroundPositionY="-28px";
+            };
+            document.getElementById('dlcSetting1').onmouseout = () => {
+                document.getElementById('dlcSetting1').style.backgroundPositionY="0px";
+            };
             //检测弹幕容器
             danmu_interval = setInterval(() => {
                 if(document.getElementsByClassName('danmu-6e95c1')[0].childNodes.length){
@@ -301,20 +317,133 @@
                 }
             },1000);
         }
+        //找弹幕发射元素
+        let btn_Interval = setInterval(() => {
+            if(!btn){
+                if(website === 0) {
+                    btn = document.getElementsByClassName('ChatSend-button')[0];
+                } else if(website === 1) {
+                    btn = document.getElementById('msg_send_bt');
+                } else if(website === 2) {
+                    btn = document.getElementsByClassName('bl-button live-skin-highlight-button-bg bl-button--primary bl-button--small')[0];
+                } else if(website === 3) {
+                    ytb_iframe = document.getElementById('chatframe').contentWindow;
+                    btn = ytb_iframe.document.querySelector('#send-button button'); // 输入框
+                    console.log('btn:', btn);
+                }
+
+                if(btn) {
+                    clearInterval(btn_Interval);
+                }
+            }
+        },100);
+        let txt_Interval = setInterval(() => {
+            if(!txt){
+                if(website === 0) {
+                    txt = document.getElementsByClassName('ChatSend-txt')[0];
+                } else if(website === 1) {
+                    txt = document.getElementById('pub_msg_input');
+                } else if(website === 2) {
+                    txt = document.getElementsByClassName('chat-input border-box')[0];
+                } else if(website === 3) {
+                    ytb_iframe = document.getElementById('chatframe').contentWindow;
+                    txt = ytb_iframe.document.querySelector('#input.yt-live-chat-text-input-field-renderer'); // 输入框
+                    console.log('txt:', txt);
+                }
+
+                if(txt) {
+                    clearInterval(txt_Interval);
+                }
+            }
+        },100);
+        //读取本地数据
+        if(window.localStorage) {
+            if(window.localStorage.dlctime) {
+                document.getElementById('DuLunCheTime').value = '' + window.localStorage.dlctime;
+            }
+            if(window.localStorage.dlcstory) {
+                document.getElementById('DuLunCheText').value = window.localStorage.dlcstory;
+            }
+        }
+        //加载热词模块
+        div5.innerHTML = `<button style="background: #ff921a; width: 80%; height: 7%; margin: 3px auto; text-align: center; color: white;" id="dlc_radio_change">修改</button>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words0"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words1"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words2"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words3"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words4"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words5"></div>
+                          <div id="dlc-radio-revise-window" style="display: none; border: 1px solid #ff921a;border-radius: 5px;background: white; position: fixed; width: 420px; height:300px; top: 50%; left: 50%; transform: translate(-50%, -50%);z-index: 1000;">
+                            <input style="cursor:pointer; display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input0" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input1" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input2" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input3" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input4" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input5" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <button style="background: #ff921a; width: 30%; height: 12%; margin: 6px auto; text-align: center; color: white;" id="dlc_radio_change1">确认</button>
+                            <button style="background: #ff921a; width: 30%; height: 12%; margin: 6px auto; text-align: center; color: white;" id="dlc_radio_change0">取消</button>
+                          </div>`;
+        if(window.localStorage) {
+            if(window.localStorage.dlcwords) {
+                dlc_radio_words = window.localStorage.dlcwords.split('@%*');
+            } else {
+                dlc_radio_words = ['火速展示吧', '刚来，谁的锅', '我看了一下，主播好像是我爹', '主播一年C一把，想看carry局的明年再来', '滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚', '尬尬尬尬尬尬尬尬尬尬尬尬尬尬尬尬'];
+                window.localStorage.setItem('dlcwords', dlc_radio_words.join('@%*'));
+            }
+        } else {
+            dlc_radio_words = ['火速展示吧', '刚来，谁的锅', '我看了一下，主播好像是我爹', '主播一年C一把，想看carry局的明年再来', '滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚', '尬尬尬尬尬尬尬尬尬尬尬尬尬尬尬尬'];
+        }
+        document.getElementById('dlc_radio_change').onclick = () => {
+            if(radio_change_flag) {
+                radio_change_flag = false;
+                document.getElementById('dlc-radio-revise-window').style.setProperty('display','none');
+            } else {
+                for(let i = 0; i < dlc_radio_words.length; i++) {
+                    document.getElementById('dlc_radio_input' + i).value = dlc_radio_words[i];
+                }
+                radio_change_flag = true;
+                document.getElementById('dlc-radio-revise-window').style.setProperty('display','block');
+            }
+        }
+        for(let i = 0; i < dlc_radio_words.length; i++) {
+            document.getElementById('dlc_radio_words' + i).innerHTML = '<span">' + dlc_radio_words[i] + '</span>';
+            document.getElementById('dlc_radio_words' + i).onclick = () => {
+                let txt_store = '';
+                if(txt.innerText !== '') {
+                    txt_store = txt.innerText;
+                    txt.innerText = '';
+                }
+
+                openFire(dlc_radio_words[i]);
+
+                if(txt_store.length) {
+                    txt.innerText = txt_store;
+                }
+            }
+        }
+        document.getElementById('dlc_radio_change1').onclick = () => {
+            for(let i = 0; i < dlc_radio_words.length; i++) {
+                dlc_radio_words[i] = document.getElementById('dlc_radio_input' + i).value;
+                if(dlc_radio_words[i].length > 30){
+                    dlc_radio_words[i] = dlc_radio_words[i].slice(0,30);
+                }
+                document.getElementById('dlc_radio_words' + i).innerHTML = '<span">' + dlc_radio_words[i] + '</span>';
+            }
+
+            if(window.localStorage) {
+                window.localStorage.setItem('dlcwords', dlc_radio_words.join('@%*'));
+            }
+
+            radio_change_flag = false;
+            document.getElementById('dlc-radio-revise-window').style.setProperty('display','none');
+        }
+        document.getElementById('dlc_radio_change0').onclick = () => {
+            radio_change_flag = false;
+            document.getElementById('dlc-radio-revise-window').style.setProperty('display','none');
+        }
     }
 //发射弹幕
     function run() {
-        if(website === 0) {
-            btn = document.getElementsByClassName('ChatSend-button')[0];
-            txt = document.getElementsByClassName('ChatSend-txt')[0];
-        } else if(website === 1) {
-            btn = document.getElementById('msg_send_bt');
-            txt = document.getElementById('pub_msg_input');
-        } else if(website === 2) {
-            btn = document.getElementsByClassName('bl-button')[0];
-            txt = document.getElementsByClassName('chat-input')[0];
-        }
-
         let _value = document.getElementById('DuLunCheSelect').value;
         document.getElementById('DuLunCheBtn').innerText = '中止';
         story = document.getElementById('DuLunCheText').value;
@@ -330,35 +459,32 @@
             document.getElementById('DuLunCheTime').value = '9999';
             return;
         }
+
+        //存储运行信息
+        if(window.localStorage) {
+            window.localStorage.dlctime = cycle_time;
+            window.localStorage.dlcstory = story;
+        }
+
         if(_value === '0') {
             if (story.length > max_danmu_long){
                 story = story.slice(0, max_danmu_long);
             }
             interval = setInterval(() => {
-                if(website === 2) {
-                    send_Danmu(story, roomId);
-                } else {
-                    if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
-                        txt.value = story;
-                        if (btn.innerHTML === '发送') {
-                            if(website === 1) {
-                                btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
-                            }
-                            btn.click();
-                        }
-                    }
-                }
+                openFire(story);
             }, cycle_time);
         } else if(_value === '3'){
             let temp_arr = story.split('\n');
+            story_arr = [];
+            time_arr = [];
             if(temp_arr.length % 2){
                 alert('程序存在错误！请检查是否有多余的回车或内容与时间是否对应');
                 finish();
             }else{
                 for(let i = 0; i < temp_arr.length; i++){
                     if(i % 2){
-                        if(temp_arr[i].length > 43){
-                            temp_arr[i] = temp_arr[i].substr(0,43);
+                        if(temp_arr[i].length > max_danmu_long){
+                            temp_arr[i] = temp_arr[i].substr(0, max_danmu_long);
                         }
                         story_arr.push(temp_arr[i]);
                     }else{
@@ -376,20 +502,15 @@
                     if(index === story_arr.length){
                         index = 0;
                     }
-                    if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
-                        txt.value = story_arr[index];
-                        if (btn.innerHTML === '发送') {
-                            if(website === 1) {
-                                btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
-                            }
-                            btn.click();
-                            clearInterval(interval);
-                            cycle_time = time_arr[index++];
-                            interval = setInterval(_f, cycle_time);
-                        }
+                    let res = openFire(story_arr[index]);
+                    clearInterval(interval);
+                    cycle_time = time_arr[index];
+                    if(res) {
+                        index++;
                     }
+                    interval = setInterval(_f, cycle_time);
                 }
-                interval = setInterval(_f, 100);
+                interval = setInterval(_f, 1);
             }
         } else {
             if(_value === '1')
@@ -399,17 +520,14 @@
             let len = story_arr.length;
             index = 0;
             interval = setInterval(() => {
-                if(txt.value === ''){//输入框中有内容时等待用户发送完成后再继续
-                    if(index === len){//小说循环
-                        index = 0;
-                    }
-                    txt.value = story_arr[index++];
-                    if (btn.innerHTML === '发送') {
-                        if(website === 1) {
-                            btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
-                        }
-                        btn.click();
-                    }
+                if(index === len){//小说循环
+                    index = 0;
+                }
+
+                let res = openFire(story_arr[index]);
+
+                if(res) {
+                    index++;
                 }
             }, cycle_time);
         }
@@ -461,7 +579,7 @@
             if((story.charAt(i) === '\n') && str.length){
                 story_arr.push(str);
                 str = '';
-            }else if((!website && str.length >= 43) || (website === 1 && str.length >= 30)){
+            }else if(str.length > max_danmu_long){
                 continue;
             }else{
                 str += story.charAt(i);
@@ -472,22 +590,49 @@
         }
     }
 //pilipili发射api
-    async function send_Danmu(danmuContent, roomId) {
-        console.log('进入bapi');
-        return BAPI.room.get_info(roomId).then((res) => {
-            console.log('res:', res);
-            return BAPI.sendLiveDanmu(danmuContent, res.data.room_id).then((response) => {
-                console.log('response:', response);
-                if (response.code === 0 && !response.msg) {
-                    console.log('发送成功');
-                } else {
-                    console.log('发送出错');
-                }
-            }, () => {
-                console.log('发送失败');
-            })
-        }), () => {
-            console.log('信息获取失败');
-        };
+//     async function send_Danmu(danmuContent, roomId) {
+//         console.log('进入bapi');
+//         return BAPI.room.get_info(roomId).then((res) => {
+//             console.log('res:', res);
+//             return BAPI.sendLiveDanmu(danmuContent, res.data.room_id).then((response) => {
+//                 console.log('response:', response);
+//                 if (response.code === 0 && !response.msg) {
+//                     console.log('发送成功');
+//                 } else {
+//                     console.log('发送出错');
+//                 }
+//             }, () => {
+//                 console.log('发送失败');
+//             })
+//         }), () => {
+//             console.log('信息获取失败');
+//         };
+//     }
+//通用发射函数
+    function openFire(value) {
+        if(txt.innerText === '') {
+            if(website === 3) {
+                txt.textContent = value;
+            } else {
+                txt.value = value;
+            }
+        } else {
+            return false;
+        }
+
+        if(website === 2) {
+            txt.dispatchEvent(new InputEvent('input'));
+            setTimeout(() => {btn.click();}, 50);
+        } else if(website === 3) {
+            txt.dispatchEvent(new InputEvent('input'));
+            btn.click();
+        } else if (btn.innerHTML === '发送') {
+            if(website === 1) {
+                btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
+            }
+            btn.click();
+        }
+
+        return true;
     }
 })();
