@@ -1,34 +1,36 @@
 // ==UserScript==
 // @icon          https://www.douyu.com/favicon.ico
 // @name          独轮车-说书人自动弹幕发射器
-// @namespace     https://greasyfork.org/scripts/396285
-// @author        软中居士
+// @namespace     https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
+// @author        飞天小协警
 // @description   适配斗鱼/虎牙/b站/ytb直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
 // @match         *://www.huya.com/*
 // @match         *://live.bilibili.com/*
 // @match         *://www.youtube.com/*
-// @version       1.0.1
-// @license       MIT
+// @require       https://greasyfork.org/scripts/414419-st-ex/code/ST_EX.js?version=861721
+// @version       2.1.0
+// @license       GPLv2
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
 // @grant         GM_getResourceText
 // @grant         GM_notification
+// @namespace     https://greasyfork.org/scripts/396285
 // ==/UserScript==
 (function () {
     'use strict';
-
     let tip = false;
     let div1 = document.createElement('div');//默认悬浮窗
     let div2 = document.createElement('div');//控制台
     let div3 = document.createElement('div');//计数器
-    let div5 = document.createElement('div');//设置
-    let css1 = 'background: #1A59B7;color:#ffffff;overflow: hidden;z-index: 996;position: fixed;padding:5px;text-align:center;width: 85px;height: 22px;border-radius: 5px;right: 10px;top: 30%;'
-    let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 155px;height: 370px;box-sizing: content-box;border: 1px solid #ff921a;border-radius: 5px;right: 10px;top: 30%;display: none;';
-    let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;top: 7%;right: 1px;display: none;';
-    let css5 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;top: 7%;right: 1px;display: none;';
-    let div2_innerHTML1 = '<div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option></select><div id="dlcSetting1" style="display:inline-block;position:relative;width:19px;height: 19px;background-image: url(https://shark2.douyucdn.cn/front-publish/live-master/assets/images/guessHeadIcon_new_3e70beb.png);background-position: -158px 0px;cursor: pointer;float:right;margin-right: 5px;""></div></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合斗鱼的弹幕规范☆最重要的是！大伙不爱看烂活！⚠pilipili直播弹幕功能暂时有些问题，下个版本修复" style="margin: 2px;overflow: scroll;overflow-wrap: normal;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议六千以上" style="width: 145px;margin: 1px;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;">隐藏</button></div></div><div style="font-size: 75%;float: left;color: #777;">屏蔽白字黑奴：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
-    let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
+    let div5 = document.createElement('div');//快速发射
+    let div6 = document.createElement('div');//资源库
+    let css1 = 'background: #D4F2E7;color:#000000;overflow: hidden;z-index: 996;position: fixed;text-align:center;width: 100px;height: 30px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;padding: 0;right: 5px;top: 30%;display: flex; justify-content: center; align-items: center;line-height: 100%;'
+    let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 165px;height: 375px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;right: 5px;top: 30%;display: none;';
+    let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;padding:5px;border-radius: 5px;top: 7%;right: 0px;display: none;';
+    let css6_1 = 'cursor: pointer; border: 1px solid #ff921a;  height: 25px; margin: 1px; display: flex; justify-content: center; align-items: center; position: relative; float: left; padding: 3px;';
+    let div2_innerHTML1 = '<div><div style="position: absolute; cursor: move;" id="dlc-move"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M192 448h192v128H192v128L0 512l192-192v128z m256 384v-192h128v192h128l-192 192-192-192h128z m384-256h-192V448h192V320l192 192-192 192V576zM576 192v192H448V192H320l192-192 192 192H576z" fill="#2c2c2c" p-id="4932"></path></svg></div><div id="dlc-website" style="cursor: pointer; position: absolute; top: 5px; right: 5px;"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m3.008-92.992a416 416 0 1 0 0-832 416 416 0 0 0 0 832zM448 448h128v384H448V448z m0-256h128v128H448V192z" fill="#262626" p-id="3853"></path></svg></div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option><option value="6">弹幕资源库</option></select></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合当前网站的弹幕规范☆最重要的是！大伙不爱看烂活！⚠使用出现问题可在Github或Greasyfork提出反馈哦" style="margin: 2px;overflow-y: scroll;overflow-wrap: normal;width: 90%;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议6000" style="display: block;position: relative;font-size: 10px;width: 90%;margin: 1px auto;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;cursor: pointer; ">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;cursor: pointer; ">隐藏</button></div></div><div style="font-size: 75%;float: left;color: #777;user-select:none;">屏蔽白字黑奴（斗鱼）：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友（斗鱼）：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同（斗鱼）：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕（斗鱼）：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
+    let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
     let max_danmu_long = 43;//弹幕字数限制
     let min_danmu_long = 18;//最小弹幕长度
     let error_danmu_long = 25;//防止无法断句弹幕长度
@@ -44,6 +46,7 @@
     let select_flag = false;//功能标记
     let radio_flag = false;
     let radio_change_flag = false;
+    let resource_flag = false;
     let danmu_helperX = false;//应急弹幕标记
     let danmu_count = 0;
     let danmu_parent = null;
@@ -52,6 +55,13 @@
     let txt = null; //输入框
     let dlc_radio_words; //热词
     let ytb_iframe;//ytb直播右侧iframe
+    let mouse_flag = false;//鼠标拖动标记
+    let mouse_throttle = null;//鼠标拖动节流
+    let mouse_throttle_flag = false;//鼠标拖动节流标记
+    let mouseDownX;
+    let mouseDownY;
+    let initX;
+    let initY;
     init();//初始化
 
 //核心功能函数
@@ -85,22 +95,26 @@
         div1.style.cssText = css1;
         div2.style.cssText = css2;
         div3.style.cssText = css3;
-        div5.style.cssText = css5;
-        div1.innerHTML = '独轮车控制台';
+        div5.style.cssText = css3;
+        div6.style.cssText = css3;
+        div1.innerHTML = '<svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M284.804377 360.254363l177.952351-104.775683a7.675874 7.675874 0 0 0 0-13.240883l-179.167697-104.903614a7.483977 7.483977 0 0 0-7.547943 0L98.152703 242.237797a7.675874 7.675874 0 0 0 0 13.240883l179.103731 104.839649a7.483977 7.483977 0 0 0 7.547943 0z m464.390391 0l177.95235-104.775683a7.675874 7.675874 0 0 0 0-13.240883l-179.103732-104.903614a7.483977 7.483977 0 0 0-7.611908 0L562.543093 242.237797a7.675874 7.675874 0 0 0 0 13.240883l179.103732 104.839649a7.483977 7.483977 0 0 0 7.611908 0z m-22.963657 39.402821l-0.639657 208.527917a7.675874 7.675874 0 0 1-3.710005 6.588458 7.483977 7.483977 0 0 1-7.547943 0L535.165808 509.933911a7.675874 7.675874 0 0 1-3.837937-6.588459l0.639656-208.527916c0-5.948803 6.332596-9.594843 11.321915-6.652425l179.167697 104.903615a7.675874 7.675874 0 0 1 3.837937 6.588458z m-429.465163 0l0.639656 208.527917c0 5.884837 6.268631 9.530877 11.257949 6.588458L487.831251 509.933911a7.675874 7.675874 0 0 0 3.837937-6.588459l-0.639657-208.527916a7.675874 7.675874 0 0 0-3.837937-6.652425 7.483977 7.483977 0 0 0-7.483977 0l-179.167697 104.903615a7.675874 7.675874 0 0 0-3.837937 6.588458z m422.684807 295.265295l2.494659 0.895519a7.675874 7.675874 0 0 1 3.773972 6.588459l0.639656 208.527916a7.675874 7.675874 0 0 1-3.837937 6.652424l-179.103732 104.839649a7.547943 7.547943 0 0 1-11.38588-6.588459l-0.639656-208.527916a7.675874 7.675874 0 0 1 3.837937-6.652424l179.103732-104.839649a7.483977 7.483977 0 0 1 7.611908 0z m-410.851167 0.895519l179.167697 104.903614a7.675874 7.675874 0 0 1 3.837937 6.588459l-0.639656 208.527916a7.675874 7.675874 0 0 1-3.837937 6.588459 7.483977 7.483977 0 0 1-7.483978 0L300.411988 917.586797a7.675874 7.675874 0 0 1-3.837937-6.588459l0.639656-208.527916c0-5.948803 6.332596-9.594843 11.321915-6.652424z m643.81395-137.206252l2.494659 0.895519a7.675874 7.675874 0 0 1 3.773971 6.652424L959.257859 774.62364a7.675874 7.675874 0 0 1-3.773972 6.588458l-179.103732 104.903615a7.547943 7.547943 0 0 1-11.38588-6.652425l-0.639656-208.527916c0-2.750522 1.471209-5.245181 3.837937-6.652424l179.103732-104.839649a7.483977 7.483977 0 0 1 7.611909 0zM75.636805 559.507265l179.167697 104.903614c2.366728 1.279312 3.837937 3.837937 3.837938 6.588459l-0.639657 208.527916a7.675874 7.675874 0 0 1-3.837937 6.588459 7.483977 7.483977 0 0 1-7.483977 0L67.513171 781.276064A7.675874 7.675874 0 0 1 63.7392 774.687605l0.639656-208.527916c0-5.884837 6.268631-9.594843 11.257949-6.652424z m436.885174-18.358133l2.558625 0.895519 179.103732 104.903614a7.675874 7.675874 0 0 1 0 13.176918l-177.888385 104.775683a7.675874 7.675874 0 0 1-7.547943 0L329.58031 660.125183a7.675874 7.675874 0 0 1 0-13.240883l177.888385-104.775683a7.483977 7.483977 0 0 1 7.547943 0z m439.187937-253.943505l2.430693 0.959484a7.675874 7.675874 0 0 1 3.837937 6.652425l0.575691 208.527916a7.675874 7.675874 0 0 1-3.837937 6.588459l-179.103732 104.839648a7.547943 7.547943 0 0 1-11.321914-6.588458l-0.639657-208.527917c0-2.750522 1.407244-5.309146 3.837938-6.652424l179.103731-104.839649a7.483977 7.483977 0 0 1 7.547943 0zM76.404392 288.229077l179.103732 104.903614c2.430694 1.279312 3.837937 3.837937 3.837937 6.588459l-0.639656 208.527916a7.675874 7.675874 0 0 1-3.773971 6.588459 7.483977 7.483977 0 0 1-7.547943 0l-179.103732-104.839649a7.675874 7.675874 0 0 1-3.837937-6.588459l0.639656-208.527916c0-5.948803 6.268631-9.594843 11.321914-6.652424zM512.585945 0.127931l2.430693 0.895519 179.167698 104.839649a7.675874 7.675874 0 0 1 0 13.240883L516.295951 223.879665a7.356046 7.356046 0 0 1-7.547943 0L329.58031 119.040016a7.675874 7.675874 0 0 1 0-13.240883L507.468695 1.02345a7.483977 7.483977 0 0 1 7.547943 0z" fill="#333333" p-id="3848"></path></svg><span style="font-size: 12px;font-weight: bold;">独轮车控制台</span>';
         div2.innerHTML = div2_innerHTML1;
         div3.innerHTML = div3_innerHTML1;
         div1.onclick = () => {
             div2.style.setProperty('display','block');
+            div1.style.setProperty('display','none');
             if(!tip){
                 tip = true;
-                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ ，NGA用户可以私信：飞天小协警 。多句转轮模式每句之间请用回车分隔，斗鱼字数限制43，为了自己的账号和他人观看体验，建议发言间隔调至8000以上，喜欢的好兄弟打个星星吧~求求了！！！注：编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容，比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜，依此类推 注：部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
+                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.0.0(Aqua)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
             }
         };
         document.body.appendChild(div1);
         document.body.appendChild(div2);
         div2.appendChild(div3);
         div2.appendChild(div5);
+        div2.appendChild(div6);
         document.getElementById('DuLunCheYincang').onclick = () => {
+            div1.style.setProperty('display','flex');
             div2.style.setProperty('display','none');
         };
         document.getElementById('DuLunCheBtn').onclick = () => {
@@ -125,6 +139,14 @@
                 radio_flag = false;
                 div5.style.setProperty('display','none');
             }
+
+            if(s_value === '6'){
+                resource_flag = true;
+                div6.style.setProperty('display','block');
+            } else if(s_value !== '6' && resource_flag){
+                resource_flag = false;
+                div6.style.setProperty('display','none');
+            }
         };
         document.getElementById('dlcCountBtn1').onclick = () => {
             document.getElementById('dlcCount1').value = "" + (parseInt(document.getElementById('dlcCount1').value) + 1);
@@ -138,8 +160,6 @@
         };
         document.getElementById('dlcCountBtn3').onclick = () => {
             openFire(document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount1').value + "/" + document.getElementById('dlcCount2').value);
-            if(txt === ''){//输入框中有内容时等待用户发送完成后再继续
-            }
         };
         document.getElementById('dlcCountBtn6').onclick = () => {
             openFire(document.getElementById('DuLunCheCountText').value + " " + document.getElementById('dlcCount3').value + document.getElementById('dlcCountUnit').value);
@@ -190,12 +210,12 @@
                 }
             };
             //右上设置按钮
-            document.getElementById('dlcSetting1').onmouseover = () => {
-                document.getElementById('dlcSetting1').style.backgroundPositionY="-28px";
-            };
-            document.getElementById('dlcSetting1').onmouseout = () => {
-                document.getElementById('dlcSetting1').style.backgroundPositionY="0px";
-            };
+            // document.getElementById('dlcSetting1').onmouseover = () => {
+            //     document.getElementById('dlcSetting1').style.backgroundPositionY="-28px";
+            // };
+            // document.getElementById('dlcSetting1').onmouseout = () => {
+            //     document.getElementById('dlcSetting1').style.backgroundPositionY="0px";
+            // };
             //检测弹幕容器
             danmu_interval = setInterval(() => {
                 if(document.getElementsByClassName('danmu-6e95c1')[0].childNodes.length){
@@ -329,7 +349,6 @@
                 } else if(website === 3) {
                     ytb_iframe = document.getElementById('chatframe').contentWindow;
                     btn = ytb_iframe.document.querySelector('#send-button button'); // 输入框
-                    console.log('btn:', btn);
                 }
 
                 if(btn) {
@@ -348,7 +367,6 @@
                 } else if(website === 3) {
                     ytb_iframe = document.getElementById('chatframe').contentWindow;
                     txt = ytb_iframe.document.querySelector('#input.yt-live-chat-text-input-field-renderer'); // 输入框
-                    console.log('txt:', txt);
                 }
 
                 if(txt) {
@@ -365,21 +383,21 @@
                 document.getElementById('DuLunCheText').value = window.localStorage.dlcstory;
             }
         }
-        //加载热词模块
-        div5.innerHTML = `<button style="background: #ff921a; width: 80%; height: 7%; margin: 3px auto; text-align: center; color: white;" id="dlc_radio_change">修改</button>
-                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words0"></div>
-                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words1"></div>
-                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words2"></div>
-                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words3"></div>
-                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words4"></div>
-                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 1px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words5"></div>
+        //快速发射模块
+        div5.innerHTML = `<button style="cursor: pointer; background: #ff921a; width: 80%; height: 7%; margin: 3px auto; text-align: center; color: white;" id="dlc_radio_change">修改</button>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 2px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words0"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 2px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words1"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 2px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words2"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 2px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words3"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 2px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words4"></div>
+                          <div style="cursor: pointer; border: 1px solid #ff921a; width: 85%; height: 13%; margin: 2px auto; display: flex; justify-content: center; align-items: center;" id="dlc_radio_words5"></div>
                           <div id="dlc-radio-revise-window" style="display: none; border: 1px solid #ff921a;border-radius: 5px;background: white; position: fixed; width: 420px; height:300px; top: 50%; left: 50%; transform: translate(-50%, -50%);z-index: 1000;">
-                            <input style="cursor:pointer; display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input0" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
-                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input1" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
-                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input2" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="cursor:pointer; display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input0" placeholder="字符限制30以内，超出部分将在保存时剪除" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input1" placeholder="字符限制30以内，超出部分将在保存时剪除" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input2" placeholder="字符限制30以内，超出部分将在保存时剪除" />
                             <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input3" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
-                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input4" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
-                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input5" placeholder="字符限制30以内，超出部分将在保存时剪掉" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input4" placeholder="字符限制30以内，超出部分将在保存时剪除" />
+                            <input style="display: block; margin: 5px auto; width: 85%; height: 25px; padding: 3px;" type="text" id="dlc_radio_input5" placeholder="字符限制30以内，超出部分将在保存时剪除" />
                             <button style="background: #ff921a; width: 30%; height: 12%; margin: 6px auto; text-align: center; color: white;" id="dlc_radio_change1">确认</button>
                             <button style="background: #ff921a; width: 30%; height: 12%; margin: 6px auto; text-align: center; color: white;" id="dlc_radio_change0">取消</button>
                           </div>`;
@@ -440,6 +458,76 @@
         document.getElementById('dlc_radio_change0').onclick = () => {
             radio_change_flag = false;
             document.getElementById('dlc-radio-revise-window').style.setProperty('display','none');
+        }
+        //拖动
+        let divm = document.getElementById('dlc-move');
+        divm.onmousedown = (e) => {
+            mouse_flag = true;
+            mouseDownX = e.pageX;
+            mouseDownY = e.pageY;
+            initX = div2.offsetLeft;
+            initY = div2.offsetTop;
+        }
+        divm.onmousemove = (e) => {
+            if(mouse_flag) {
+                if(!mouse_throttle_flag) {
+                    mouse_throttle_flag = true;
+                    mouse_throttle = setTimeout(() => {
+                        mouse_throttle_flag = false;
+                        let mouseMoveX = e.pageX, mouseMoveY = e.pageY;
+                        div2.style.left = parseInt(mouseMoveX) - parseInt(mouseDownX) + parseInt(initX) + "px";
+                        div2.style.top = parseInt(mouseMoveY) - parseInt(mouseDownY) + parseInt(initY) + "px";
+                    },5);
+                }
+            }
+        }
+        divm.onmouseup = (e) => {
+            mouse_flag = false;
+        }
+        //资源库模块
+        div6.innerHTML = `
+            <div id = 'dlc-resource-mod1' style="overflow: hidden; width: 100%; box-sizing: border-box; position: relative; margin 0; border: 2px solid #ff921a;border-radius: 5px; padding: 1px;">
+                <p style="margin-top: 1px; margin-bottom: 1px;">快射模块</p>
+            </div>
+            <div id = 'dlc-resource-mod2' style="overflow: hidden; width: 100%; box-sizing: border-box; position: relative; margin 0; border: 2px solid #ff921a;border-radius: 5px; padding: 1px;">
+                <p style="margin-top: 1px; margin-bottom: 1px;">说书模块</p>
+            </div>`;
+        let rm1 = document.getElementById('dlc-resource-mod1');
+        let rm2 = document.getElementById('dlc-resource-mod2');
+        for(let i = 0; i < titles_1.length; i++) {
+            let temp = document.createElement('div');
+            temp.innerHTML = '<span>' + titles_1[i] + '</span>';
+            temp.style.cssText = css6_1;
+            rm1.appendChild(temp);
+            temp.onclick = () => {
+                for(let j = 0; j < dlc_radio_words.length; j++) {
+                    dlc_radio_words[j] = data_1[i][j];
+                    document.getElementById('dlc_radio_words' + j).innerHTML = '<span">' + dlc_radio_words[j] + '</span>';
+                }
+                document.getElementById('DuLunCheSelect').value = 5;
+
+                let event = document.createEvent("HTMLEvents");
+                event.initEvent("change", true, true);
+                document.getElementById('DuLunCheSelect').dispatchEvent(event);
+            }
+        }
+        for(let i = 0; i < titles_2.length; i++) {
+            let temp = document.createElement('div');
+            temp.innerHTML = '<span>' + titles_2[i] + '</span>';
+            temp.style.cssText = css6_1;
+            rm2.appendChild(temp);
+            temp.onclick = () => {
+                document.getElementById('DuLunCheText').value = data_2[i];
+                document.getElementById('DuLunCheSelect').value = 1;
+
+                let event = document.createEvent("HTMLEvents");
+                event.initEvent("change", true, true);
+                document.getElementById('DuLunCheSelect').dispatchEvent(event);
+            }
+        }
+        //安装信息
+        document.getElementById('dlc-website').onclick = () => {
+            window.open("https://greasyfork.org/zh-CN/scripts/396285", "_blank");
         }
     }
 //发射弹幕
