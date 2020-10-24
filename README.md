@@ -1,7 +1,7 @@
 # Storyteller-AutoBarrageForDouyuTV
 基于https://github.com/Ironieser/Storyteller_Of_Auto-Barrage 制作的全新悬浮窗版自动弹幕发射装置
 
-现同时支持斗鱼、虎牙、b站和ytb
+现同时支持斗鱼、虎牙、Mildom、b站和ytb
 请在当地法律限制和直播平台规范内使用，不要拿来做于直播内容无关的事！！！！！
 
 使用方法：打开直播间页面后复制v3.0.js文件代码至浏览器控制台(F12 console) 你的页面右侧就会出现弹幕发射控制台啦！（3.0版只保留基础功能，完整版请先安装Tampermonkey然后进入插件版网页获取最新版本，插件版持续更新并且可联网获取有趣的弹幕库资源）
