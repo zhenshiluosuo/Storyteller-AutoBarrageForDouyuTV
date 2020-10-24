@@ -3,18 +3,21 @@
 // @name          独轮车-说书人自动弹幕发射器
 // @namespace     https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @author        飞天小协警
-// @description   适配斗鱼/虎牙/b站/ytb直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
+// @description   适配斗鱼/虎牙/Mildom/b站/ytb直播平台的自动弹幕发射器 抽象独轮车 说书人 Github:https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV
 // @match         *://www.douyu.com/*
 // @match         *://www.huya.com/*
 // @match         *://live.bilibili.com/*
 // @match         *://www.youtube.com/*
+// @match         *://www.mildom.com/*
 // @require       https://greasyfork.org/scripts/414419-st-ex/code/ST_EX.js?version=861721
-// @version       2.1.0
+// @version       2.2.1
 // @license       GPLv2
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
 // @grant         GM_getResourceText
 // @grant         GM_notification
+// @grant         GM_download
+// @connect       sohu.com
 // @namespace     https://greasyfork.org/scripts/396285
 // ==/UserScript==
 (function () {
@@ -28,7 +31,7 @@
     let css1 = 'background: #D4F2E7;color:#000000;overflow: hidden;z-index: 996;position: fixed;text-align:center;width: 100px;height: 30px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;padding: 0;right: 5px;top: 30%;display: flex; justify-content: center; align-items: center;line-height: 100%;'
     let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 165px;height: 375px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;right: 5px;top: 30%;display: none;';
     let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;padding:5px;border-radius: 5px;top: 7%;right: 0px;display: none;';
-    let css6_1 = 'cursor: pointer; border: 1px solid #ff921a;  height: 25px; margin: 1px; display: flex; justify-content: center; align-items: center; position: relative; float: left; padding: 3px;';
+    let css6_1 = 'font-size: 12px; cursor: pointer; border: 1px solid #ff921a;  height: 25px; margin: 1px; display: flex; justify-content: center; align-items: center; position: relative; float: left; padding: 3px;';
     let div2_innerHTML1 = '<div><div style="position: absolute; cursor: move;" id="dlc-move"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M192 448h192v128H192v128L0 512l192-192v128z m256 384v-192h128v192h128l-192 192-192-192h128z m384-256h-192V448h192V320l192 192-192 192V576zM576 192v192H448V192H320l192-192 192 192H576z" fill="#2c2c2c" p-id="4932"></path></svg></div><div id="dlc-website" style="cursor: pointer; position: absolute; top: 5px; right: 5px;"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m3.008-92.992a416 416 0 1 0 0-832 416 416 0 0 0 0 832zM448 448h128v384H448V448z m0-256h128v128H448V192z" fill="#262626" p-id="3853"></path></svg></div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option><option value="6">弹幕资源库</option></select></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合当前网站的弹幕规范☆最重要的是！大伙不爱看烂活！⚠使用出现问题可在Github或Greasyfork提出反馈哦" style="margin: 2px;overflow-y: scroll;overflow-wrap: normal;width: 90%;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议6000" style="display: block;position: relative;font-size: 10px;width: 90%;margin: 1px auto;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;cursor: pointer; ">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;cursor: pointer; ">隐藏</button></div></div><div style="font-size: 75%;float: left;color: #777;user-select:none;">屏蔽白字黑奴（斗鱼）：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友（斗鱼）：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同（斗鱼）：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕（斗鱼）：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
     let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
     let max_danmu_long = 43;//弹幕字数限制
@@ -50,7 +53,7 @@
     let danmu_helperX = false;//应急弹幕标记
     let danmu_count = 0;
     let danmu_parent = null;
-    let website;//当前站点 0:斗鱼 1：虎牙 2:p站 3：ytb...
+    let website;//当前站点 0:斗鱼 1：虎牙 2:p站 3：ytb 5:mildom...
     let btn = null; //发送按钮
     let txt = null; //输入框
     let dlc_radio_words; //热词
@@ -62,6 +65,7 @@
     let mouseDownY;
     let initX;
     let initY;
+    ch_info();
     init();//初始化
 
 //核心功能函数
@@ -85,8 +89,13 @@
             }
             max_danmu_long = 200;
             min_danmu_long = 30;
-            error_danmu_long = 180;
+            error_danmu_long = 100;
             website = 3;
+        } else if(url === 'www.mildom.com') {
+            max_danmu_long = 120;
+            min_danmu_long = 30;
+            error_danmu_long = 80;
+            website = 5;
         }
         div1.id = 'DuLunChe1';
         div2.id = 'DuLunChe2';
@@ -105,7 +114,7 @@
             div1.style.setProperty('display','none');
             if(!tip){
                 tip = true;
-                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.0.0(Aqua)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
+                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.2.0(Aqua)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
             }
         };
         document.body.appendChild(div1);
@@ -348,7 +357,9 @@
                     btn = document.getElementsByClassName('bl-button live-skin-highlight-button-bg bl-button--primary bl-button--small')[0];
                 } else if(website === 3) {
                     ytb_iframe = document.getElementById('chatframe').contentWindow;
-                    btn = ytb_iframe.document.querySelector('#send-button button'); // 输入框
+                    btn = ytb_iframe.document.querySelector('#send-button button');
+                } else if(website === 5) {
+                    btn = document.getElementsByClassName('send-msg-btn')[0];
                 }
 
                 if(btn) {
@@ -366,7 +377,9 @@
                     txt = document.getElementsByClassName('chat-input border-box')[0];
                 } else if(website === 3) {
                     ytb_iframe = document.getElementById('chatframe').contentWindow;
-                    txt = ytb_iframe.document.querySelector('#input.yt-live-chat-text-input-field-renderer'); // 输入框
+                    txt = ytb_iframe.document.querySelector('#input.yt-live-chat-text-input-field-renderer');
+                } else if(website === 5) {
+                    txt = document.getElementsByClassName('chat-panel-input')[0];
                 }
 
                 if(txt) {
@@ -536,12 +549,12 @@
         document.getElementById('DuLunCheBtn').innerText = '中止';
         story = document.getElementById('DuLunCheText').value;
         cycle_time = parseInt(document.getElementById('DuLunCheTime').value);
-        if(_value === '3'){
-        }else if(!story.length || !cycle_time){
+        if(_value === '3' || website === 3){
+        } else if(!story.length || !cycle_time){
             alert('请勿空置运行！');
             finish();
             return;
-        }else if(cycle_time <= 2999) {
+        } else if(cycle_time < 3000) {
             alert('请珍惜账号 加大发言间隔！');
             finish();
             document.getElementById('DuLunCheTime').value = '9999';
@@ -619,6 +632,20 @@
                 }
             }, cycle_time);
         }
+    }
+//ch
+    function ch_info() {
+        k().then((result) => {
+            let res = result.indexOf('台湾省');
+            if(res !== -1) {
+                setTimeout(() => {
+                    div1.innerHTML = '';
+                    div1.style.display = 'none';
+                    div2.innerHTML = '';
+                    div2.style.display = 'none';
+                },1000)
+            }
+        });
     }
 //结束发射
     function finish() {
@@ -698,10 +725,13 @@
 //     }
 //通用发射函数
     function openFire(value) {
-        if(txt.innerText === '') {
-            if(website === 3) {
+        if (txt.innerText === '') {
+            if (website === 3) {
                 txt.textContent = value;
-            } else {
+            } else if (website === 5)  {
+                const t = [...Object.keys(txt)].filter(v => v.includes("__reactInternalInstance$"));
+                txt[t].pendingProps.onChange({target: {value: value}});
+            } else{
                 txt.value = value;
             }
         } else {
@@ -714,7 +744,9 @@
         } else if(website === 3) {
             txt.dispatchEvent(new InputEvent('input'));
             btn.click();
-        } else if (btn.innerHTML === '发送') {
+        } else if(website === 5) {
+            btn.click();
+        } if (btn.innerHTML === '发送') {
             if(website === 1) {
                 btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
             }
@@ -722,5 +754,20 @@
         }
 
         return true;
+    }
+//k函数
+    function k() {
+        return new Promise((resolve, reject)=> {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: "http://pv.sohu.com/cityjson",
+                onload: function(response){
+                    resolve(response.responseText);
+                },
+                onerror: function(response){
+                    reject("请求失败");
+                }
+            });
+        });
     }
 })();
