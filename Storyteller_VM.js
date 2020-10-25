@@ -10,7 +10,7 @@
 // @match         *://www.youtube.com/*
 // @match         *://www.mildom.com/*
 // @require       https://greasyfork.org/scripts/414419-st-ex/code/ST_EX.js?version=861721
-// @version       2.2.1
+// @version       2.2.2
 // @license       GPLv2
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
@@ -79,6 +79,9 @@
             error_danmu_long = 15;
             website = 1;
         } else if(url === 'live.bilibili.com') {
+            if (window.top !== window.self) {
+                throw new Error('Frame error!');
+            }
             max_danmu_long = 20;
             min_danmu_long = 8;
             error_danmu_long = 12;
@@ -114,7 +117,7 @@
             div1.style.setProperty('display','none');
             if(!tip){
                 tip = true;
-                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.2.0(Aqua)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
+                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.2.2(Aqua)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
             }
         };
         document.body.appendChild(div1);
