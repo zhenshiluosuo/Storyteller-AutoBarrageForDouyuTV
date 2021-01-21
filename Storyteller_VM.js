@@ -10,7 +10,8 @@
 // @match         *://www.youtube.com/*
 // @match         *://www.mildom.com/*
 // @require       https://greasyfork.org/scripts/414419-st-ex/code/ST_EX.js?version=861721
-// @version       2.3.0
+// @require       https://greasyfork.org/scripts/420380-chtext-convert/code/chtext-convert.js?version=892303
+// @version       2.4.1
 // @license       GPLv2
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
@@ -29,11 +30,12 @@
     let div5 = document.createElement('div');//快速发射
     let div6 = document.createElement('div');//资源库
     let div7 = document.createElement('div');//定时设置
+	let div8 = document.createElement('div');//转换器
     let css1 = 'background: #D4F2E7;color:#000000;overflow: hidden;z-index: 996;position: fixed;text-align:center;width: 100px;height: 30px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;padding: 0;right: 5px;top: 25%;display: flex; justify-content: center; align-items: center;line-height: 100%;'
     let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 165px;height: 410px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;right: 5px;top: 25%;display: none;';
     let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;padding:5px;border-radius: 5px;top: 7%;right: 0px;display: none;';
     let css6_1 = 'font-size: 12px; cursor: pointer; border: 1px solid #ff921a;  height: 25px; margin: 1px; display: flex; justify-content: center; align-items: center; position: relative; float: left; padding: 3px;';
-    let div2_innerHTML1 = '<div><div style="position: absolute; cursor: move;" id="dlc-move"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M192 448h192v128H192v128L0 512l192-192v128z m256 384v-192h128v192h128l-192 192-192-192h128z m384-256h-192V448h192V320l192 192-192 192V576zM576 192v192H448V192H320l192-192 192 192H576z" fill="#2c2c2c" p-id="4932"></path></svg></div><div id="dlc-website" style="cursor: pointer; position: absolute; top: 5px; right: 5px;"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m3.008-92.992a416 416 0 1 0 0-832 416 416 0 0 0 0 832zM448 448h128v384H448V448z m0-256h128v128H448V192z" fill="#262626" p-id="3853"></path></svg></div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option><option value="6">弹幕资源库</option></select></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合当前网站的弹幕规范☆最重要的是！大伙不爱看烂活！⚠使用出现问题可在Github或Greasyfork提出反馈哦" style="margin: 2px;overflow-y: scroll;overflow-wrap: normal;width: 90%;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议6000" style="display: block;position: relative;font-size: 10px;width: 90%;margin: 1px auto;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;cursor: pointer; ">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;cursor: pointer; ">隐藏</button></div><button id="DuLunCheDS" style="display: block; background: #f70; color: #FFFFFF; width: 90%; height: 25px; margin: 2px auto;cursor: pointer; ">定时启动</button></div><div style="font-size: 75%;float: left;color: #777;user-select:none;">屏蔽白字黑奴（斗鱼）：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友（斗鱼）：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同（斗鱼）：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕（斗鱼）：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
+    let div2_innerHTML1 = '<div><div style="position: absolute; cursor: move;" id="dlc-move"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M192 448h192v128H192v128L0 512l192-192v128z m256 384v-192h128v192h128l-192 192-192-192h128z m384-256h-192V448h192V320l192 192-192 192V576zM576 192v192H448V192H320l192-192 192 192H576z" fill="#2c2c2c" p-id="4932"></path></svg></div><div id="dlc-website" style="cursor: pointer; position: absolute; top: 5px; right: 5px;"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m3.008-92.992a416 416 0 1 0 0-832 416 416 0 0 0 0 832zM448 448h128v384H448V448z m0-256h128v128H448V192z" fill="#262626" p-id="3853"></path></svg></div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option><option value="6">弹幕资源库</option></select></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合当前网站的弹幕规范☆最重要的是！大伙不爱看烂活！⚠使用出现问题可在Github或Greasyfork提出反馈哦" style="margin: 2px;overflow-y: scroll;overflow-wrap: normal;width: 90%;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议6000" style="display: block;position: relative;font-size: 10px;width: 90%;margin: 1px auto;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;cursor: pointer; ">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;cursor: pointer; ">隐藏</button></div><div style="display: flex; flex-direction: row;"><button id="DuLunCheDS" style="display: block; background: #f70; color: #FFFFFF; width: 45%; height: 25px; margin: 2px auto;cursor: pointer; padding: 0 3px;">定时启动</button><button id="DuLunCheConvert" style="display: block; background: #f70; color: #FFFFFF; width: 45%; height: 25px; margin: 2px auto;cursor: pointer; padding: 0 3px;">简繁火</button></div></div><div style="font-size: 75%;float: left;color: #777;user-select:none;">屏蔽白字黑奴（斗鱼）：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友（斗鱼）：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同（斗鱼）：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕（斗鱼）：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
     let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
     let max_danmu_long = 43;//弹幕字数限制
     let min_danmu_long = 18;//最小弹幕长度
@@ -74,9 +76,11 @@
     let st_m;
     let en_h;
     let en_m;
+	let chtext_convert_flag = false; //转换器标志
+	let chtext_convert_backup = '';
     ch_info();
     init();//初始化
-
+ 
 //核心功能函数
     function init() {
         let url = window.location.host;
@@ -135,6 +139,7 @@
         div2.appendChild(div5);
         div2.appendChild(div6);
         div2.appendChild(div7);
+		div2.appendChild(div8);
         document.getElementById('DuLunCheYincang').onclick = () => {
             div1.style.setProperty('display','flex');
             div2.style.setProperty('display','none');
@@ -145,7 +150,7 @@
         };
         document.getElementById('DuLunCheSelect').onchange = () => {
             let s_value = document.getElementById('DuLunCheSelect').value;
-
+ 
             if(s_value === '4'){
                 select_flag = true;
                 div3.style.setProperty('display','block');
@@ -153,7 +158,7 @@
                 select_flag = false;
                 div3.style.setProperty('display','none');
             }
-
+ 
             if(s_value === '5'){
                 radio_flag = true;
                 div5.style.setProperty('display','block');
@@ -161,7 +166,7 @@
                 radio_flag = false;
                 div5.style.setProperty('display','none');
             }
-
+ 
             if(s_value === '6'){
                 resource_flag = true;
                 div6.style.setProperty('display','block');
@@ -310,7 +315,7 @@
                             transform: translateX(-600px);
                             -webkit-transform: translateX(-600px);
                         }
-
+ 
                     }
                     </style>`;
                     let ele = document.createElement('div');
@@ -342,7 +347,7 @@
                             },9000);
                         }
                     })
-
+ 
                 }
             },1000);
         } else if(website === 1) {
@@ -381,7 +386,7 @@
                 } else if(website === 5) {
                     btn = document.getElementsByClassName('send-msg-btn')[0];
                 }
-
+ 
                 if(btn) {
                     clearInterval(btn_Interval);
                 }
@@ -401,7 +406,7 @@
                 } else if(website === 5) {
                     txt = document.getElementsByClassName('chat-panel-input')[0];
                 }
-
+ 
                 if(txt) {
                     clearInterval(txt_Interval);
                 }
@@ -464,9 +469,9 @@
                     txt_store = txt.innerText;
                     txt.innerText = '';
                 }
-
+ 
                 openFire(dlc_radio_words[i]);
-
+ 
                 if(txt_store.length) {
                     txt.innerText = txt_store;
                 }
@@ -480,11 +485,11 @@
                 }
                 document.getElementById('dlc_radio_words' + i).innerHTML = '<span">' + dlc_radio_words[i] + '</span>';
             }
-
+ 
             if(window.localStorage) {
                 window.localStorage.setItem('dlcwords', dlc_radio_words.join('@%*'));
             }
-
+ 
             radio_change_flag = false;
             document.getElementById('dlc-radio-revise-window').style.setProperty('display','none');
         }
@@ -538,7 +543,7 @@
                     document.getElementById('dlc_radio_words' + j).innerHTML = '<span">' + dlc_radio_words[j] + '</span>';
                 }
                 document.getElementById('DuLunCheSelect').value = 5;
-
+ 
                 let event = document.createEvent("HTMLEvents");
                 event.initEvent("change", true, true);
                 document.getElementById('DuLunCheSelect').dispatchEvent(event);
@@ -552,7 +557,7 @@
             temp.onclick = () => {
                 document.getElementById('DuLunCheText').value = data_2[i];
                 document.getElementById('DuLunCheSelect').value = 1;
-
+ 
                 let event = document.createEvent("HTMLEvents");
                 event.initEvent("change", true, true);
                 document.getElementById('DuLunCheSelect').dispatchEvent(event);
@@ -628,6 +633,43 @@
             dlc_time_show_interval = null;
             div7.style.setProperty('display', 'none');
         }
+	//简繁火 DuLunCheConvert
+	let css8 = 'width: 450px; height: 50px; color: #FFFFFF; display: none; border: 1px solid #ff921a;border-radius: 5px;background: white; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1001; padding: 2px;'
+        div8.style.cssText = css8;
+        div8.innerHTML = `
+			<button id="dlcconvertbtn1" style="flex: 1; background-color:rgb(255,0,0);">简转繁</button>
+			<button id="dlcconvertbtn2" style="flex: 1; background-color:rgb(255,165,0);">繁转简</button>
+			<button id="dlcconvertbtn3" style="flex: 1; background-color:rgb(255,255,0);">简转火</button>
+			<button id="dlcconvertbtn4" style="flex: 1; background-color:rgb(0,255,0);">火转简</button>
+			<button id="dlcconvertbtn5" style="flex: 1; background-color:rgb(0,127,255);">繁转火</button>
+			<button id="dlcconvertbtn6" style="flex: 1; background-color:rgb(0,0,255);">火转繁</button>
+			<button id="dlcconvertbtn7" style="flex: 1; background-color:rgb(139,0,255);">还原</button>
+			<button id="dlcconvertbtn8" style="flex: 1;">隐藏</button>
+        `;
+	document.getElementById('DuLunCheConvert').onclick = () => {
+            if(!chtext_convert_flag) {
+                chtext_convert_flag = true;
+                div8.style.setProperty('display', 'flex');
+				chtext_convert_backup = document.getElementById('DuLunCheText').value;
+            } else {
+                chtext_convert_flag = false;
+                div8.style.setProperty('display', 'none');
+            }
+        }
+		for(let i = 1; i < 7; i++) {
+			let btnname = 'dlcconvertbtn' + i;
+			document.getElementById(btnname).onclick = (e) => {
+				let _type = parseInt(e.path[0].id.slice(-1));
+			        document.getElementById('DuLunCheText').value = convert(document.getElementById('DuLunCheText').value, _type);
+			}
+		}
+		document.getElementById('dlcconvertbtn7').onclick = () => {
+			document.getElementById('DuLunCheText').value = chtext_convert_backup;
+		}
+		document.getElementById('dlcconvertbtn8').onclick = () => {
+			chtext_convert_flag = false;
+                        div8.style.setProperty('display', 'none');
+		}
     }
 //发射弹幕
     function run() {
@@ -646,13 +688,13 @@
             document.getElementById('DuLunCheTime').value = '9999';
             return;
         }
-
+ 
         //存储运行信息
         if(window.localStorage) {
             window.localStorage.dlctime = cycle_time;
             window.localStorage.dlcstory = story;
         }
-
+ 
         if(_value === '0') {
             if (story.length > max_danmu_long){
                 story = story.slice(0, max_danmu_long);
@@ -710,9 +752,9 @@
                 if(index === len){//小说循环
                     index = 0;
                 }
-
+ 
                 let res = openFire(story_arr[index]);
-
+ 
                 if(res) {
                     index++;
                 }
@@ -823,7 +865,7 @@
         } else {
             return false;
         }
-
+ 
         if(website === 2) {
             txt.dispatchEvent(new InputEvent('input'));
             setTimeout(() => {btn.click();}, 50);
@@ -838,7 +880,7 @@
             }
             btn.click();
         }
-
+ 
         return true;
     }
 //k函数
