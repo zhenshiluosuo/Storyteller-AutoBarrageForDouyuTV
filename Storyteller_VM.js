@@ -11,7 +11,7 @@
 // @match         *://www.mildom.com/*
 // @require       https://greasyfork.org/scripts/414419-st-ex/code/ST_EX.js?version=861721
 // @require       https://greasyfork.org/scripts/420380-chtext-convert/code/chtext-convert.js?version=892303
-// @version       2.5.2
+// @version       2.5.4
 // @license       GPLv2
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
@@ -135,7 +135,7 @@
             div1.style.setProperty('display','none');
             if(!tip){
                 tip = true;
-                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.3.0(Aqua)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
+                alert('欢迎使用持续更新的独轮车-说书人自动弹幕发射装置，当前版本V2.5.3(Crimson)，对本插件的意见和问题可以到Github反馈哦，项目地址：https://github.com/zhenshiluosuo/Storyteller-AutoBarrageForDouyuTV/ 。多句转轮模式每句之间请用回车分隔，为了自己的账号和他人观看体验，建议发言间隔调至8000ms以上，喜欢的好兄弟打个星星吧~求求了！编程独轮车教程：奇数行为下一句发送的间隔毫秒时间，偶数行为发送内容（一行中内容过多挤到下一行也算到上一行中），比如第一行8000，第二行啦啦啦，第三行10000，第四行噜噜噜，则先发送啦啦啦，8秒后发送噜噜噜，10秒后再发送啦啦啦，8秒后发送噜噜噜 部分功能可能在非斗鱼平台上无法使用 定制功能:shinymoon@aliyun.com');
             }
         };
         document.body.appendChild(div1);
@@ -281,30 +281,12 @@
                 }
             }, 1000);
             //关闭广告
-            let ad_i1 = setInterval(() => {
-                if(document.getElementsByClassName('liveosTag_1Z4iZj')[0].childNodes.length){
-                    document.getElementsByClassName('liveosTag_1Z4iZj')[0].style.display = 'none';//关手游广告
-                    clearInterval(ad_i1);
-                }
-            },1000);
-            let ad_i2= setInterval(() => {
-                if(document.getElementsByClassName('Bottom-ad')[0].childNodes.length){
-                    document.getElementsByClassName('Bottom-ad')[0].style.display = 'none';//关底部广告栏
-                    clearInterval(ad_i2);
-                }
-            },1000);
-            let ad_i3= setInterval(() => {
-                if(document.getElementsByClassName('Title-ad')[0].childElementCount){
-                    document.getElementsByClassName('Title-ad')[0].innerHTML = '';//关左上角广告栏
-                    clearInterval(ad_i3);
-                }
-            },1000);
-            let ad_i5= setInterval(() => {
-                if(document.getElementsByClassName('RoomText-wrap')[0].childElementCount){
-                    document.getElementsByClassName('RoomText-wrap')[0].style.display = 'none';//关右下角广告栏
-                    clearInterval(ad_i5);
-                }
-            },1000);
+            //let ad_i1 = setInterval(() => {
+            //    if(document.getElementsByClassName('liveosTag_1Z4iZj')[0].childNodes.length){
+            //        document.getElementsByClassName('liveosTag_1Z4iZj')[0].style.display = 'none';//关手游广告
+            //        clearInterval(ad_i1);
+            //    }
+            //},1000);
             //应急弹幕
             let danmu_helper_i = setInterval(() => {
                 if(document.getElementsByClassName('Barrage-list')[0].childElementCount){
@@ -416,7 +398,7 @@
                 } else if(website === 1) {
                     txt = document.getElementById('pub_msg_input');
                 } else if(website === 2) {
-                    txt = document.getElementsByClassName('chat-input border-box')[0];
+                    txt = document.getElementsByClassName('chat-input border-box')[1];
                 } else if(website === 3) {
                     ytb_iframe = document.getElementById('chatframe').contentWindow;
                     txt = ytb_iframe.document.querySelector('#input.yt-live-chat-text-input-field-renderer');
@@ -886,9 +868,11 @@
 //通用发射函数
     function openFire(value) {
         if (txt.innerText === '') {
-            if (website === 3) {
+            if(!website) {
+                document.getElementsByClassName('ChatSend-txt')[0].value = value;
+            } else if (website === 3) {
                 txt.textContent = value;
-            } else if (website === 5)  {
+            } else if (website === 5) {
                 const t = [...Object.keys(txt)].filter(v => v.includes("__reactInternalInstance$"));
                 txt[t].pendingProps.onChange({target: {value: value}});
             } else{
@@ -906,11 +890,13 @@
             btn.click();
         } else if(website === 5) {
             btn.click();
-        } else if (btn.innerHTML === '发送') {
+        } if (btn.innerHTML === '发送') {
             if(website === 1) {
                 btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
+                btn.click();
+            } else if(website === 0) {
+                document.getElementsByClassName('ChatSend-button')[0].click();
             }
-            btn.click();
         }
  
         return true;
