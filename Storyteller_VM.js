@@ -11,7 +11,7 @@
 // @match         *://www.mildom.com/*
 // @require       https://greasyfork.org/scripts/414419-st-ex/code/ST_EX.js?version=861721
 // @require       https://greasyfork.org/scripts/420380-chtext-convert/code/chtext-convert.js?version=892303
-// @version       2.5.4
+// @version       2.5.6
 // @license       GPLv2
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
@@ -83,7 +83,7 @@
 	let chtext_convert_backup = '';
     ch_info();
     init();//初始化
- 
+
 //核心功能函数
     function init() {
         let url = window.location.host;
@@ -156,7 +156,7 @@
         };
         document.getElementById('DuLunCheSelect').onchange = () => {
             let s_value = document.getElementById('DuLunCheSelect').value;
- 
+
             if(s_value === '4'){
                 select_flag = true;
                 div3.style.setProperty('display','block');
@@ -164,7 +164,7 @@
                 select_flag = false;
                 div3.style.setProperty('display','none');
             }
- 
+
             if(s_value === '5'){
                 radio_flag = true;
                 div5.style.setProperty('display','block');
@@ -172,7 +172,7 @@
                 radio_flag = false;
                 div5.style.setProperty('display','none');
             }
- 
+
             if(s_value === '6'){
                 resource_flag = true;
                 div6.style.setProperty('display','block');
@@ -180,7 +180,7 @@
                 resource_flag = false;
                 div6.style.setProperty('display','none');
             }
- 
+
             if(s_value === '7'){
                 setting_flag = true;
                 div9.style.setProperty('display','block');
@@ -314,7 +314,7 @@
                             transform: translateX(-600px);
                             -webkit-transform: translateX(-600px);
                         }
- 
+
                     }
                     </style>`;
                     let ele = document.createElement('div');
@@ -346,7 +346,7 @@
                             },9000);
                         }
                     })
- 
+
                 }
             },1000);
         } else if(website === 1) {
@@ -376,7 +376,7 @@
                 if(website === 0) {
                     btn = document.getElementsByClassName('ChatSend-button')[0];
                 } else if(website === 1) {
-                    btn = document.getElementById('msg_send_bt');
+                    btn = document.querySelector('#player-full-input-btn');
                 } else if(website === 2) {
                     btn = document.getElementsByClassName('bl-button live-skin-highlight-button-bg bl-button--primary bl-button--small')[0];
                 } else if(website === 3) {
@@ -385,7 +385,7 @@
                 } else if(website === 5) {
                     btn = document.getElementsByClassName('send-msg-btn')[0];
                 }
- 
+
                 if(btn) {
                     clearInterval(btn_Interval);
                 }
@@ -396,16 +396,16 @@
                 if(website === 0) {
                     txt = document.getElementsByClassName('ChatSend-txt')[0];
                 } else if(website === 1) {
-                    txt = document.getElementById('pub_msg_input');
+                    txt = document.querySelector('#player-full-input-txt');
                 } else if(website === 2) {
-                    txt = document.getElementsByClassName('chat-input border-box')[1];
+                    txt = document.getElementById('chat-control-panel-vm').getElementsByTagName('textarea')[0];
                 } else if(website === 3) {
                     ytb_iframe = document.getElementById('chatframe').contentWindow;
                     txt = ytb_iframe.document.querySelector('#input.yt-live-chat-text-input-field-renderer');
                 } else if(website === 5) {
                     txt = document.getElementsByClassName('chat-panel-input')[0];
                 }
- 
+
                 if(txt) {
                     clearInterval(txt_Interval);
                 }
@@ -468,9 +468,9 @@
                     txt_store = txt.innerText;
                     txt.innerText = '';
                 }
- 
+
                 openFire(dlc_radio_words[i]);
- 
+
                 if(txt_store.length) {
                     txt.innerText = txt_store;
                 }
@@ -484,11 +484,11 @@
                 }
                 document.getElementById('dlc_radio_words' + i).innerHTML = '<span">' + dlc_radio_words[i] + '</span>';
             }
- 
+
             if(window.localStorage) {
                 window.localStorage.setItem('dlcwords', dlc_radio_words.join('@%*'));
             }
- 
+
             radio_change_flag = false;
             document.getElementById('dlc-radio-revise-window').style.setProperty('display','none');
         }
@@ -542,7 +542,7 @@
                     document.getElementById('dlc_radio_words' + j).innerHTML = '<span">' + dlc_radio_words[j] + '</span>';
                 }
                 document.getElementById('DuLunCheSelect').value = 5;
- 
+
                 let event = document.createEvent("HTMLEvents");
                 event.initEvent("change", true, true);
                 document.getElementById('DuLunCheSelect').dispatchEvent(event);
@@ -556,7 +556,7 @@
             temp.onclick = () => {
                 document.getElementById('DuLunCheText').value = data_2[i];
                 document.getElementById('DuLunCheSelect').value = 1;
- 
+
                 let event = document.createEvent("HTMLEvents");
                 event.initEvent("change", true, true);
                 document.getElementById('DuLunCheSelect').dispatchEvent(event);
@@ -702,13 +702,13 @@
             document.getElementById('DuLunCheTime').value = '9999';
             return;
         }
- 
+
         //存储运行信息
         if(window.localStorage) {
             window.localStorage.dlctime = cycle_time;
             window.localStorage.dlcstory = story;
         }
- 
+
         if(_value === '0') {
             if (story.length > max_danmu_long){
                 story = story.slice(0, max_danmu_long);
@@ -766,9 +766,9 @@
                 if(index === len){//小说循环
                     index = 0;
                 }
- 
+
                 let res = openFire(story_arr[index]);
- 
+
                 if(res) {
                     index++;
                 }
@@ -881,7 +881,7 @@
         } else {
             return false;
         }
- 
+
         if(website === 2) {
             txt.dispatchEvent(new InputEvent('input'));
             setTimeout(() => {btn.click();}, 50);
@@ -892,13 +892,12 @@
             btn.click();
         } if (btn.innerHTML === '发送') {
             if(website === 1) {
-                btn.setAttribute('class', 'btn-sendMsg hiido_stat enable');
                 btn.click();
             } else if(website === 0) {
                 document.getElementsByClassName('ChatSend-button')[0].click();
             }
         }
- 
+
         return true;
     }
 //k函数
