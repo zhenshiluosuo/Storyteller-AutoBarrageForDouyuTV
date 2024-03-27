@@ -36,7 +36,7 @@
     let css2 = 'background: #FFFFFF;color:#ffffff;overflow: hidden;z-index: 997;position: fixed;padding:5px;text-align:center;width: 165px;height: 410px;box-sizing: border-box;border: 1px solid #ff921a;border-radius: 5px;right: 5px;top: 25%;display: none;';
     let css3 = 'background: #FFFFFF;color:#000000;overflow: hidden;z-index: 999;position:absolute;text-align:center;width: 100%;height: 100%;box-sizing: border-box;border: 1px solid #ff921a;padding:5px;border-radius: 5px;top: 7%;right: 0px;display: none;';
     let css6_1 = 'font-size: 12px; cursor: pointer; border: 1px solid #ff921a;  height: 25px; margin: 1px; display: flex; justify-content: center; align-items: center; position: relative; float: left; padding: 3px;';
-    let div2_innerHTML1 = '<div><div style="position: absolute; cursor: move;" id="dlc-move"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M192 448h192v128H192v128L0 512l192-192v128z m256 384v-192h128v192h128l-192 192-192-192h128z m384-256h-192V448h192V320l192 192-192 192V576zM576 192v192H448V192H320l192-192 192 192H576z" fill="#2c2c2c" p-id="4932"></path></svg></div><div id="dlc-website" style="cursor: pointer; position: absolute; top: 5px; right: 5px;"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m3.008-92.992a416 416 0 1 0 0-832 416 416 0 0 0 0 832zM448 448h128v384H448V448z m0-256h128v128H448V192z" fill="#262626" p-id="3853"></path></svg></div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option><option value="6">弹幕资源库</option><option value="7">插件设置</option></select></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合当前网站的弹幕规范☆最重要的是！大伙不爱看烂活！⚠使用出现问题可在Github或Greasyfork提出反馈哦" style="margin: 2px;overflow-y: scroll;overflow-wrap: normal;width: 90%;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议6000" style="display: block;position: relative;font-size: 10px;width: 90%;margin: 1px auto;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;cursor: pointer; ">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;cursor: pointer; ">隐藏</button></div><div style="display: flex; flex-direction: row;"><button id="DuLunCheDS" style="display: block; background: #f70; color: #FFFFFF; width: 45%; height: 25px; margin: 2px auto;cursor: pointer; padding: 0 3px;">定时启动</button><button id="DuLunCheConvert" style="display: block; background: #f70; color: #FFFFFF; width: 45%; height: 25px; margin: 2px auto;cursor: pointer; padding: 0 3px;">简繁火</button></div></div><div style="font-size: 75%;float: left;color: #777;user-select:none;">屏蔽白字黑奴（斗鱼）：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友（斗鱼）：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同（斗鱼）：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕（斗鱼）：<input type="checkbox" id="dlc_btn4" value="2" /></div>';
+    let div2_innerHTML1 = '<div><div style="position: absolute; cursor: move;" id="dlc-move"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M192 448h192v128H192v128L0 512l192-192v128z m256 384v-192h128v192h128l-192 192-192-192h128z m384-256h-192V448h192V320l192 192-192 192V576zM576 192v192H448V192H320l192-192 192 192H576z" fill="#2c2c2c" p-id="4932"></path></svg></div><div id="dlc-website" style="cursor: pointer; position: absolute; top: 5px; right: 5px;"><svg viewBox="0 0 1024 1024" width="16" height="16"><path d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024z m3.008-92.992a416 416 0 1 0 0-832 416 416 0 0 0 0 832zM448 448h128v384H448V448z m0-256h128v128H448V192z" fill="#262626" p-id="3853"></path></svg></div><select style="display:inline-block;position:relative;" id="DuLunCheSelect"><option value="0">单句模式</option><option value="1">说书模式</option><option value="2">多句转轮</option><option value="3">编程模式</option><option value="4">计数器</option><option value="5">快速发射</option><option value="6">弹幕资源库</option><option value="7">插件设置</option></select></div><textarea id="DuLunCheText" rows="10" cols="20" placeholder="输入需要发射的内容到这里哦☆发射前请斟酌内容是否符合当前网站的弹幕规范☆最重要的是！大伙不爱看烂活！⚠使用出现问题可在Github或Greasyfork提出反馈哦" style="margin: 2px;overflow-y: scroll;overflow-wrap: normal;width: 90%;"></textarea><div  style="margin: 0 auto;"><input type="text" placeholder="间隔时间(ms) 建议6000" style="display: block;position: relative;font-size: 10px;width: 90%;margin: 1px auto;" id="DuLunCheTime"/><div><button id="DuLunCheBtn" style="display: inline-block; background: #f70; color: #FFFFFF; width: 70px; height: 35px; margin: 2px;cursor: pointer; ">出动</button><button id="DuLunCheYincang" style="display: inline-block; background: #f70; color: #FFFFFF; width:70px; height: 35px; margin: 2px;cursor: pointer; ">隐藏</button></div><div style="display: flex; flex-direction: row;"><button id="DuLunCheDS" style="display: block; background: #f70; color: #FFFFFF; width: 45%; height: 25px; margin: 2px auto;cursor: pointer; padding: 0 3px;">定时启动</button><button id="DuLunCheConvert" style="display: block; background: #f70; color: #FFFFFF; width: 45%; height: 25px; margin: 2px auto;cursor: pointer; padding: 0 3px;">简繁火</button></div></div><div style="font-size: 75%;float: left;color: #777;user-select:none;">屏蔽白字黑奴（斗鱼）：<input type="checkbox" id="dlc_btn1" value="0" /><br>屏蔽绿字色友（斗鱼）：<input type="checkbox" id="dlc_btn2" value="1" /><br>屏蔽粉字男同（斗鱼）：<input type="checkbox" id="dlc_btn3" value="2" /><br>临时应急弹幕（斗鱼）：<input type="checkbox" id="dlc_btn4" value="2" /><br>防止屏蔽重复（单句）：<input type="checkbox" id="dlc_btn5" value="2" /></div>';
     let div3_innerHTML1 = '<textarea id="DuLunCheCountText" rows="6" cols="19" placeholder="输入计数内容,如：“本局豹女Q命中次数：”" style="margin: 0 auto;overflow: scroll;overflow-wrap: normal;"></textarea><div><h5 style="margin: 5px;">计数方式1</h5><div><input type="text" value="0" id="dlcCount1" style="width:40%;"/>&nbsp/&nbsp<input value="0" type="text" id="dlcCount2" style="width:40%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn1" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加双值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn2" style="cursor: pointer; height: 20px;width:40%;font-size:50%;background: #f70; color: #FFFFFF;">增加分母</button><div style="margin: 2px;"><button id="dlcCountBtn3" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">发送</button></div></div></div><div><h5 style="margin: 5px;">计数方式2</h5><div><input type="text" value="0" id="dlcCount3" style="width:35%;"/>&nbsp单位:<input value="次" type="text" id="dlcCountUnit" style="width:30%;"/></div><div style="margin-top:5px;"><button id="dlcCountBtn5" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">增加值</button>&nbsp&nbsp&nbsp<button id="dlcCountBtn6" style="cursor: pointer; height: 20px;width:45%;font-size:50%;background: #f70; color: #FFFFFF;">发送</button></div><div style="margin: 5px;"><button id="dlcCountBtn0" style="cursor: pointer; width:50%;font-size:50%;background: #f70; color: #FFFFFF;height: 20px;">重置数据</button></div>';
     let max_danmu_long = 43;//弹幕字数限制
     let min_danmu_long = 18;//最小弹幕长度
@@ -81,6 +81,8 @@
     let en_m;
 	let chtext_convert_flag = false; //转换器标志
 	let chtext_convert_backup = '';
+    let anti_norepeat = false; //防止屏蔽重复弹幕
+    let unique_num = 0 //防屏蔽在后面加的数字
     ch_info();
     init();//初始化
 
@@ -251,6 +253,13 @@
                 }else{
                     danmu_helperX = false;
                     danmu_parent.style.setProperty('display','none');
+                }
+            };  
+            document.getElementById('dlc_btn5').onclick = () => {
+                if (document.getElementById('dlc_btn5').checked) {
+                    anti_norepeat = true
+                } else {
+                    anti_norepeat = false;
                 }
             };
             //右上设置按钮
@@ -795,6 +804,7 @@
         clearInterval(interval);
         story_arr = [];
         time_arr = [];
+        unique_num = 0
     }
 //小说分段
     function get_better_sentence() {
@@ -867,6 +877,11 @@
 //     }
 //通用发射函数
     function openFire(value) {
+        let _value = document.getElementById('DuLunCheSelect').value;
+        if(anti_norepeat && _value === '0' ){
+            value = value + unique_num //防屏蔽重复弹幕
+            unique_num++
+        }
         if (txt.innerText === '') {
             if(!website) {
                 document.getElementsByClassName('ChatSend-txt')[0].value = value;
